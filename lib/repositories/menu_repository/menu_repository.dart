@@ -62,7 +62,7 @@ class MenuRepository implements IMenuRepository {
     try {
       category.color ??= '0xffff0000';
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .postData(
             endPoint: MenuEndpoints.categories,
             data: category.toJsonForMenu(),
@@ -93,7 +93,7 @@ class MenuRepository implements IMenuRepository {
   FutureEither<CategoryModel> updateCategory(CategoryModel category) async {
     try {
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .putData(
             endPoint: '${MenuEndpoints.categories}/${category.id}',
             data: category.toJsonForMenu(),
@@ -123,7 +123,7 @@ class MenuRepository implements IMenuRepository {
   FutureEither<List<CategoryModel>> getAllCategories() async {
     try {
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .getData(endPoint: MenuEndpoints.categories);
 
       if (response.data["code"] == 200) {
@@ -149,7 +149,7 @@ class MenuRepository implements IMenuRepository {
   FutureEither<ProductModel> createMenuItem(ProductModel productModel) async {
     try {
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .postData(
             endPoint: MenuEndpoints.products,
             data: productModel.toJsonForMenu(),
@@ -179,7 +179,7 @@ class MenuRepository implements IMenuRepository {
       final requestBody = json.encode({'categories': categoriesData});
 
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .putData(endPoint: MenuEndpoints.categories, data: requestBody);
 
       if (response.data["code"] == 200) {
@@ -205,7 +205,7 @@ class MenuRepository implements IMenuRepository {
   FutureEither<ProductModel> updateMenuItem(ProductModel product) async {
     try {
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .putData(
             endPoint: '${MenuEndpoints.products}/${product.id}',
             data: product.toJsonForMenu(),
@@ -309,7 +309,7 @@ class MenuRepository implements IMenuRepository {
                   '📦 Sending batch ${i ~/ batchSize + 1} with ${batch.length} products',
                 );
                 final response = await ref
-                    .read(menuDioProvider)
+                    .read(ultraPosDioProvider)
                     .putData(
                       endPoint: MenuEndpoints.updateProducts,
                       data: requestBody,
@@ -408,7 +408,7 @@ class MenuRepository implements IMenuRepository {
 
             try {
               final response = await ref
-                  .read(menuDioProvider)
+                  .read(ultraPosDioProvider)
                   .putData(
                     endPoint: MenuEndpoints.updateProducts,
                     data: requestBody,
@@ -439,7 +439,7 @@ class MenuRepository implements IMenuRepository {
   FutureEitherVoid toggleActive(int id, bool isActive) async {
     try {
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .putData(
             endPoint: '${MenuEndpoints.products}/$id/toggle-active',
             data: {'isActive': isActive ? 1 : 0},
@@ -472,7 +472,7 @@ class MenuRepository implements IMenuRepository {
       }).toList();
 
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .postData(
             endPoint: MenuEndpoints.syncCategoriesOrder,
             data: {"categories": categoriesData},
@@ -496,7 +496,7 @@ class MenuRepository implements IMenuRepository {
   FutureEitherVoid deleteCategory(int id) async {
     try {
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .delete(endPoint: '${MenuEndpoints.categories}/$id');
       if (response.data["code"] == 200) {
         ToastUtils.showToast(
@@ -520,7 +520,7 @@ class MenuRepository implements IMenuRepository {
   FutureEitherVoid deleteProduct(int id) async {
     try {
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .delete(endPoint: '${MenuEndpoints.products}/$id');
       if (response.data["code"] == 200) {
         ToastUtils.showToast(
@@ -554,7 +554,7 @@ class MenuRepository implements IMenuRepository {
       };
 
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .getData(
             endPoint: '${MenuEndpoints.productsByCategory}/$categoryId',
             query: queryParameters,
@@ -591,7 +591,7 @@ class MenuRepository implements IMenuRepository {
     try {
       final imageData = product.toJsonForMenu()['imageData'];
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .postData(
             endPoint: "${MenuEndpoints.products}/${product.id}/update-image",
             data: {"imageData": imageData},
@@ -622,7 +622,7 @@ class MenuRepository implements IMenuRepository {
         return product.toJsonForSorting();
       }).toList();
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .postData(
             endPoint: MenuEndpoints.syncProductsOrder,
             data: {"products": productsData},
@@ -646,7 +646,7 @@ class MenuRepository implements IMenuRepository {
   FutureEither<SettingModel> getMenuSettings() async {
     try {
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .getData(endPoint: MenuEndpoints.settings);
 
       if (response.data["code"] == 200) {
@@ -669,7 +669,7 @@ class MenuRepository implements IMenuRepository {
   FutureEither<SettingModel> updateMenuSettings(SettingModel setting) async {
     try {
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .putData(
             endPoint: MenuEndpoints.settings,
             data: setting.toJsonMenu(),
@@ -699,7 +699,7 @@ class MenuRepository implements IMenuRepository {
   FutureEitherVoid toggleProductActive(int id, bool isActive) async {
     try {
       final response = await ref
-          .read(menuDioProvider)
+          .read(ultraPosDioProvider)
           .putData(
             endPoint: "${MenuEndpoints.products}/$id/toggle-active",
             data: {"isActive": isActive ? 1 : 0},

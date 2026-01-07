@@ -15,20 +15,24 @@ import 'package:desktoppossystem/repositories/categories/icategory_repository.da
 import 'package:desktoppossystem/shared/utils/enum.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final categoryControllerProvider =
-    ChangeNotifierProvider<CategoryController>((ref) {
+final categoryControllerProvider = ChangeNotifierProvider<CategoryController>((
+  ref,
+) {
   return CategoryController(
-      ref: ref, categoryRepository: ref.read(categoryProviderRepository));
+    ref: ref,
+    categoryRepository: ref.read(categoryProviderRepository),
+  );
 });
 
 class CategoryController extends ChangeNotifier {
   final Ref _ref;
   final ICategoryRepository _categoryRepository;
 
-  CategoryController(
-      {required Ref ref, required ICategoryRepository categoryRepository})
-      : _ref = ref,
-        _categoryRepository = categoryRepository {
+  CategoryController({
+    required Ref ref,
+    required ICategoryRepository categoryRepository,
+  }) : _ref = ref,
+       _categoryRepository = categoryRepository {
     getAllCategories();
   }
 
@@ -41,11 +45,18 @@ class CategoryController extends ChangeNotifier {
     getCategoriesRequestState = RequestState.loading;
     notifyListeners();
 
-    _categoryRepository.getAllCategories().then((value) {
-      categories = value;
-      getCategoriesRequestState = RequestState.success;
-      notifyListeners();
-    });
+    final response = await _categoryRepository.getAllCategories();
+    response.fold(
+      (l) {
+        getCategoriesRequestState = RequestState.error;
+        notifyListeners();
+      },
+      (r) {
+        categories = r;
+        getCategoriesRequestState = RequestState.success;
+        notifyListeners();
+      },
+    );
   }
 
   categoryNameById(int categoryId) {
@@ -95,52 +106,62 @@ class CategoryController extends ChangeNotifier {
 
   //! update category
   Future<CategoryModel> updateCategory(
-      CategoryModel c, BuildContext context) async {
+    CategoryModel c,
+    BuildContext context,
+  ) async {
     requestState = RequestState.loading;
     notifyListeners();
 
     final updateRes = await _categoryRepository.updateCategory(c);
-    updateRes.fold((l) {
-      requestState = RequestState.error;
-      notifyListeners();
+    updateRes.fold(
+      (l) {
+        requestState = RequestState.error;
+        notifyListeners();
 
-      ToastUtils.showToast(
-          message: l.message.toString(), type: RequestState.success);
-    }, (r) {
-      updateCategoryById(r);
+        ToastUtils.showToast(
+          message: l.message.toString(),
+          type: RequestState.success,
+        );
+      },
+      (r) {
+        updateCategoryById(r);
 
-      // Re-sort the categories list to maintain proper order after update
-      categories.sort((a, b) {
-        // First sort by sort field, then by id if sort is the same
-        int sortComparison = (a.sort ?? 0).compareTo(b.sort ?? 0);
-        if (sortComparison != 0) return sortComparison;
-        return (a.id ?? 0).compareTo(b.id ?? 0);
-      });
+        // Re-sort the categories list to maintain proper order after update
+        categories.sort((a, b) {
+          // First sort by sort field, then by id if sort is the same
+          int sortComparison = (a.sort ?? 0).compareTo(b.sort ?? 0);
+          if (sortComparison != 0) return sortComparison;
+          return (a.id ?? 0).compareTo(b.id ?? 0);
+        });
 
-      c = r;
-// for edit in stock
-      if (_ref.read(currentMainScreenProvider) == ScreenName.InventoryScreen) {
-        _ref.read(selectedStockCategoryProvider.notifier).state = null;
-        _ref.read(selectedStockCategoryProvider.notifier).state = r;
-      }
-      requestState = RequestState.success;
-      notifyListeners();
-      context.pop();
-      ToastUtils.showToast(
+        c = r;
+        // for edit in stock
+        if (_ref.read(currentMainScreenProvider) ==
+            ScreenName.InventoryScreen) {
+          _ref.read(selectedStockCategoryProvider.notifier).state = null;
+          _ref.read(selectedStockCategoryProvider.notifier).state = r;
+        }
+        requestState = RequestState.success;
+        notifyListeners();
+        context.pop();
+        ToastUtils.showToast(
           message: "category $successUpdatedStatusMessage",
-          type: RequestState.success);
-      if (_ref.read(mainControllerProvider).screenUI == ScreenUI.restaurant) {
-        _ref.read(productControllerProvider).getAllProducts();
-      }
-    });
+          type: RequestState.success,
+        );
+        if (_ref.read(mainControllerProvider).screenUI == ScreenUI.restaurant) {
+          _ref.read(productControllerProvider).getAllProducts();
+        }
+      },
+    );
     return c;
   }
 
   //! update category by Id  from temp cateogries
   updateCategoryById(CategoryModel updatedCategory) {
     // Find the category and update it while preserving the exact list order
-    final targetIndex =
-        categories.indexWhere((cat) => cat.id == updatedCategory.id);
+    final targetIndex = categories.indexWhere(
+      (cat) => cat.id == updatedCategory.id,
+    );
 
     if (targetIndex != -1) {
       // Update the category using the correct sort value from the repository
@@ -162,32 +183,36 @@ class CategoryController extends ChangeNotifier {
   }
 
   //! add category
-  Future<CategoryModel?> addcategory(
-      CategoryModel c, BuildContext context) async {
+  Future addCategory(CategoryModel c, BuildContext context) async {
     requestState = RequestState.loading;
     notifyListeners();
 
     CategoryModel category = CategoryModel.second();
 
-    await _categoryRepository.addCategory(c).then((value) async {
-      category = value;
-      context.pop();
-      ToastUtils.showToast(
+    final response = await _categoryRepository.addCategory(c);
+    response.fold(
+      (l) {
+        requestState = RequestState.error;
+        ToastUtils.showToast(
+          message: l.message.toString(),
+          type: RequestState.error,
+        );
+        notifyListeners();
+      },
+      (r) {
+        category = r;
+        context.pop();
+        ToastUtils.showToast(
           message: "Category $successAddedStatusMessage",
-          type: RequestState.success);
+          type: RequestState.success,
+        );
 
-      categories.add(category);
+        categories.add(category);
 
-      requestState = RequestState.success;
-      notifyListeners();
-    }).catchError((error) {
-      debugPrint(error.toString());
-
-      requestState = RequestState.error;
-      ToastUtils.showToast(message: error.toString(), type: RequestState.error);
-      notifyListeners();
-    });
-    return category;
+        requestState = RequestState.success;
+        notifyListeners();
+      },
+    );
   }
 
   RequestState deleteCategoryRequestState =
@@ -195,24 +220,32 @@ class CategoryController extends ChangeNotifier {
   Future deleteCategory(int categoryId, BuildContext context) async {
     deleteCategoryRequestState = RequestState.loading;
     notifyListeners();
-    await _categoryRepository.deleteCategory(categoryId).then((value) {
-      deletecategoryById(categoryId);
+    final response = await _categoryRepository.deleteCategory(categoryId);
+    response.fold(
+      (l) {
+        deleteCategoryRequestState = RequestState.error;
+        notifyListeners();
+        ToastUtils.showToast(
+          message: l.message.toString(),
+          type: RequestState.error,
+        );
+      },
+      (r) {
+        deletecategoryById(categoryId);
 
-      context.pop();
-      ToastUtils.showToast(
+        context.pop();
+        ToastUtils.showToast(
           message: "category $successDeletedStatusMessage",
-          type: RequestState.success);
-      deleteCategoryRequestState = RequestState.success;
-      notifyListeners();
+          type: RequestState.success,
+        );
+        deleteCategoryRequestState = RequestState.success;
+        notifyListeners();
 
-      _ref
-          .read(productControllerProvider)
-          .deleteProductsByCategoryId(categoryId);
-    }).catchError((error) {
-      deleteCategoryRequestState = RequestState.error;
-      notifyListeners();
-      ToastUtils.showToast(message: error.toString(), type: RequestState.error);
-    });
+        _ref
+            .read(productControllerProvider)
+            .deleteProductsByCategoryId(categoryId);
+      },
+    );
   }
 
   //! delete category by id from temp categories
@@ -240,9 +273,9 @@ class CategoryController extends ChangeNotifier {
     }
 
     notifyListeners();
-    _ref.read(productControllerProvider).updateProductOrderByCategory(
-          newCategoryOrder: categories,
-        );
+    _ref
+        .read(productControllerProvider)
+        .updateProductOrderByCategory(newCategoryOrder: categories);
     //  update in database
   }
 

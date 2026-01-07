@@ -32,16 +32,16 @@ final quiverDioProvider = Provider<DioHelper>((ref) {
 });
 
 // Authenticated Dio for menu APIs (automatically includes token and user key)
-Dio menuDio = Dio(
+Dio ultraPosDio = Dio(
   BaseOptions(
     receiveDataWhenStatusError: true,
-    baseUrl: 'https://coremanager.net/api', // Set your base URL here
+    baseUrl: 'https://ultrapos.ultra-pal.com/api', // Set your base URL here
     //
     //  baseUrl: 'http://192.168.1.4:3000/api', // Set your base URL here
   ),
 );
-final menuDioProvider = Provider<MenuDioHelper>((ref) {
-  return MenuDioHelper(menuDio);
+final ultraPosDioProvider = Provider<UltraDioHelper>((ref) {
+  return UltraDioHelper(ultraPosDio);
 });
 
 final posDbProvider = Provider<PosDbHelper>((ref) {

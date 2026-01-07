@@ -74,7 +74,7 @@ class _AddEditCategoryScreenState extends ConsumerState<AddEditCategoryScreen> {
                     context,
                   );
                 } else {
-                  categoryController.addcategory(
+                  categoryController.addCategory(
                     controller.categoryModel!,
                     context,
                   );

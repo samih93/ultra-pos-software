@@ -30,8 +30,7 @@ class OnlineCategories extends ConsumerWidget {
     }
 
     // Sort categories by sort field
-    final categories = List<CategoryModel>.from(menuController.categories)
-      ..sort((a, b) => (a.sort ?? 0).compareTo(b.sort ?? 0));
+    final categories = List<CategoryModel>.from(menuController.categories);
 
     return Container(
       margin: kPaddH5,

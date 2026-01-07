@@ -27,7 +27,7 @@ class SecureConfig {
       'qui:GhTLC7FpQpCNyC2LdbvHGPQdnxsMlLnJjEWItlAil+NkszWekdLU8nsV1U/ybR+w';
   static const _telegramRequestUrl =
       'qui:SlSHSPdhXozbjH7kQJjnLMsFqj5HrYH20xSijWEX36Q=';
-  static const _menuTokenKey =
+  static const _ultraPosTokenKey =
       'qui:R1m5UOYcEsr1lV2DYYfCeOIegiAgrKGknzWEzyx4q/h5yEaeh9ziz30htGrxRXT45lBNXdb2h8DXSWJqfA8nlO91XxQry9sZOtP4f0bHReOo4wdr+n5aiN58O2r38Jvg';
   static const _subscribtionKey =
       "qui:UVWRS+cpGMHOlXikdZ7/INoWvzYNyfia933G8m4Y0Ks=";
@@ -57,7 +57,8 @@ class SecureConfig {
       deObfuscateCoreManagerKeys(_telegramBotToken);
   static String get telegramRequestUrl =>
       "${deObfuscateCoreManagerKeys(_telegramRequestUrl)}$telegramBotToken/sendMessage";
-  static String get menuTokenKey => deObfuscateCoreManagerKeys(_menuTokenKey);
+  static String get ultraPosTokenKey =>
+      deObfuscateCoreManagerKeys(_ultraPosTokenKey);
   static String get subscriptionKey => hashKey("activateSubscription");
 
   static String obfuscateCoreManagerKeys(String text) {

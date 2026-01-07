@@ -7,10 +7,10 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 
 /// user token and current user key from secure storage in headers
-class MenuDioHelper {
+class UltraDioHelper {
   final Dio dio;
 
-  MenuDioHelper(this.dio);
+  UltraDioHelper(this.dio);
 
   Future<void> init() async {
     // Fix SSL certificate verification issue
@@ -27,7 +27,7 @@ class MenuDioHelper {
 
       // Get token and current user key from secure storage
       final userId = await securePrefs.getData(key: "registrationUserId") ?? "";
-      final token = SecureConfig.menuTokenKey;
+      final token = SecureConfig.ultraPosTokenKey;
       return {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
