@@ -8,29 +8,32 @@ class UserModel {
   final String? password;
   final RoleModel? role;
 
-  UserModel(
-      {this.id,
-      required this.name,
-      required this.password,
-      required this.email,
-      this.role});
+  UserModel({
+    this.id,
+    required this.name,
+    required this.password,
+    required this.email,
+    this.role,
+  });
 
   static UserModel fakeUser() {
     return UserModel(
-        id: 1,
-        name: 'user',
-        email: 'example@gmail.com',
-        password: 'exam',
-        role: RoleModel(id: 1, name: 'user'));
+      id: 1,
+      name: 'user',
+      email: 'example@gmail.com',
+      password: 'exam',
+      role: RoleModel(id: 1, name: 'user'),
+    );
   }
 
   factory UserModel.fromJson(Map<String, dynamic> map) {
     return UserModel(
-        id: map['id'],
-        name: map['name'],
-        email: map['email'],
-        password: map['password'],
-        role: RoleModel(id: map['roleId'] ?? 0, name: map['role'] ?? 'user'));
+      id: map['id'],
+      name: map['name'],
+      email: map['email'],
+      password: map['password'],
+      role: RoleModel(id: map['id'] ?? 0, name: map['name'] ?? 'user'),
+    );
   }
 
   factory UserModel.fromJsonLocalStorage(Map<String, dynamic> map) {
@@ -44,12 +47,7 @@ class UserModel {
   }
 
   toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'email': email,
-      'role': role!.toMap(),
-    };
+    return {'id': id, 'name': name, 'email': email, 'role': role!.toMap()};
   }
 
   toJsonWithoutId() {
@@ -57,7 +55,7 @@ class UserModel {
       'name': name,
       'email': email,
       'roleId': role?.id,
-      'password': password
+      'password': password,
     };
   }
 
@@ -67,7 +65,7 @@ class UserModel {
       'name': name,
       'email': email,
       'roleId': role?.id,
-      'password': password
+      'password': password,
     };
   }
 

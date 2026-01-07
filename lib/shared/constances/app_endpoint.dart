@@ -1,4 +1,8 @@
 class AppEndpoint {
+  //Auth
+  static const String auth = '/auth/signin';
+  static const String authCode = '/auth/signin-code';
+
   static const String products = '/products';
   static const String updateProducts = '$products/update';
   static const String productsByCategory = '$products/by-category';
