@@ -12,7 +12,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
                       _In_ wchar_t *command_line, _In_ int show_command) {
 
        // Create a unique mutex name (replace with your app's GUID/name)
-  HANDLE mutex = CreateMutexW(nullptr, TRUE, L"Core_manager_9F4A8B2E-1234-5678-9012-ABCDEF123456");
+  HANDLE mutex = CreateMutexW(nullptr, TRUE, L"ultra_pos_9F4A8B2E-1234-5678-9012-ABCDEF123456");
   
   // Check if another instance exists
   if (GetLastError() == ERROR_ALREADY_EXISTS) {
@@ -44,7 +44,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(1280, 720);
-  if (!window.CreateAndShow(L"Core_manager", origin, size)) {
+  if (!window.CreateAndShow(L"ultra_pos", origin, size)) {
     return EXIT_FAILURE;
   }
   window.SetQuitOnClose(true);

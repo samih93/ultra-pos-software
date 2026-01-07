@@ -48,7 +48,7 @@ final isBackupAvailableProvider =
         final objects = await ref
             .read(supaBaseProvider)
             .storage
-            .from('core_manager')
+            .from('ultra_pos')
             .list(path: "databases/$registrationId");
 
         if (objects.isEmpty) return (isAvailable: false, backupDate: null);

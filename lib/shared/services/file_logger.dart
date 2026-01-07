@@ -19,7 +19,7 @@ class FileLogger {
     try {
       final directory = await _getLogDirectory();
       final timestamp = DateFormat('yyyyMMdd').format(DateTime.now());
-      final logFileName = 'core_manager_$timestamp.log';
+      final logFileName = 'ultra_pos_$timestamp.log';
       _logFile = File(p.join(directory.path, logFileName));
 
       // Create if doesn't exist

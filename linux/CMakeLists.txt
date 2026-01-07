@@ -4,10 +4,10 @@ project(runner LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "Core_manager")
+set(BINARY_NAME "ultra_pos")
 # The unique GTK application identifier for this application. See:
 # https://!wiki.gnome.org/HowDoI/ChooseApplicationID
-set(APPLICATION_ID "com.core.manager")
+set(APPLICATION_ID "com.pos.ultrapal")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.

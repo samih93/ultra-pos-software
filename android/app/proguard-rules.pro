@@ -45,7 +45,7 @@
 }
 
 # Keep custom model classes (adjust package name to match your models)
--keep class com.core.manager.** { *; }
+-keep class com.pos.ultrapal.** { *; }
 
 # Preserve line numbers for debugging
 -keepattributes SourceFile,LineNumberTable

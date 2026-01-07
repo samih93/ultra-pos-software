@@ -8,7 +8,7 @@ import Flutter
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
-    let versionChannel = FlutterMethodChannel(name: "com.core.manager/version",
+    let versionChannel = FlutterMethodChannel(name: "com.pos.ultrapal/version",
                                               binaryMessenger: controller.binaryMessenger)
     
     versionChannel.setMethodCallHandler({

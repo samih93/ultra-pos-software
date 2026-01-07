@@ -246,7 +246,7 @@ class WindowsDatabaseBackupService extends DatabaseBackupRestoreService {
             await globalAppWidgetRef
                 .read(supaBaseProvider)
                 .storage
-                .from('core_manager')
+                .from('ultra_pos')
                 .upload(
                   uploadPath,
                   tempFile, // Upload as stream of bytes
@@ -283,7 +283,7 @@ class WindowsDatabaseBackupService extends DatabaseBackupRestoreService {
               await globalAppWidgetRef
                   .read(supaBaseProvider)
                   .storage
-                  .from('core_manager')
+                  .from('ultra_pos')
                   .upload(
                     uploadPath,
                     tempFile,
@@ -348,7 +348,7 @@ class WindowsDatabaseBackupService extends DatabaseBackupRestoreService {
 
       // Get public URL from Supabase storage
       final publicPath = supabase.storage
-          .from('core_manager')
+          .from('ultra_pos')
           .getPublicUrl(downloadPath);
 
       debugPrint("Downloading from: $publicPath");
@@ -661,7 +661,7 @@ class AndroidDatabaseBackupService extends DatabaseBackupRestoreService {
             await globalAppWidgetRef
                 .read(supaBaseProvider)
                 .storage
-                .from('core_manager')
+                .from('ultra_pos')
                 .upload(
                   uploadPath,
                   tempFile, // Upload as a stream of bytes
@@ -697,7 +697,7 @@ class AndroidDatabaseBackupService extends DatabaseBackupRestoreService {
               await globalAppWidgetRef
                   .read(supaBaseProvider)
                   .storage
-                  .from('core_manager')
+                  .from('ultra_pos')
                   .upload(
                     uploadPath,
                     tempFile,
@@ -759,7 +759,7 @@ class AndroidDatabaseBackupService extends DatabaseBackupRestoreService {
 
       // Get public URL from Supabase storage
       final publicPath = supabase.storage
-          .from('core_manager')
+          .from('ultra_pos')
           .getPublicUrl(downloadPath);
 
       debugPrint("Downloading from: $publicPath");

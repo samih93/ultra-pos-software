@@ -142,7 +142,7 @@ class WindowsUpdateService {
 
       // Launch PowerShell updater
       final installDir = Directory.current.path;
-      const exeName = 'Core_manager.exe'; // Your app exe name
+      const exeName = 'Ultra_pos.exe'; // Your app exe name
       final updaterPath = p.join(installDir, 'updater.ps1');
 
       if (!File(updaterPath).existsSync()) {

@@ -1,4 +1,4 @@
-package com.core.manager
+package com.pos.ultrapal
 
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -8,7 +8,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 
 class MainActivity: FlutterActivity() {
-    private val CHANNEL = "com.core.manager/version"
+    private val CHANNEL = "com.pos.ultrapal/version"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

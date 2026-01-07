@@ -13,6 +13,7 @@ C:\core-manager-v1.1.70\logs\
 ```
 
 Or more generally:
+
 ```
 [Application Installation Folder]\logs\
 ```
@@ -20,15 +21,17 @@ Or more generally:
 ### Log File Format
 
 Files are named by date:
+
 ```
-core_manager_20251213.log    (for December 13, 2025)
-core_manager_20251214.log    (for December 14, 2025)
+ultra_pos_20251213.log    (for December 13, 2025)
+ultra_pos_20251214.log    (for December 14, 2025)
 ```
 
 ### How to Find the Log Files
 
 **Method 1: Quick Access**
-1. Open the folder where `Core_manager.exe` is located (e.g., `C:\core-manager-v1.1.70\`)
+
+1. Open the folder where `Ultra_pos.exe` is located (e.g., `C:\core-manager-v1.1.70\`)
 2. Look for a folder named `logs`
 3. Open the `logs` folder
 4. Find today's log file (named with today's date)
@@ -39,12 +42,14 @@ If the app shows an error screen, it will display the log file path directly on 
 ### What's in the Log Files?
 
 The log files contain:
+
 - Application startup information
 - Database initialization steps
 - All errors with detailed stack traces
 - Timestamps for each operation
 
 Example log content:
+
 ```
 [2025-12-13 14:30:00.123][INFO] Application starting...
 [2025-12-13 14:30:01.456][INFO] ═══ Splash Screen Initialization Started ═══
@@ -75,29 +80,36 @@ If you need to report an issue:
 ### Common Error Patterns in Logs
 
 **Database Issues:**
+
 ```
 [ERROR] CRITICAL: Windows database initialization failed
 [ERROR] Details: Cannot open database
 ```
+
 **Solution**: Check permissions or try running as Administrator
 
 **Asset Loading Issues:**
+
 ```
 [ERROR] CRITICAL: Failed to copy database from assets
 [ERROR] Details: Unable to load asset
 ```
+
 **Solution**: Reinstall the application
 
 **Permission Issues:**
+
 ```
 [ERROR] Failed to create directory
 [ERROR] Details: Access denied
 ```
+
 **Solution**: Run as Administrator or check folder permissions
 
 ### Need Help?
 
 If you can't find the log files or need assistance:
+
 1. Take a screenshot of the error (if visible)
 2. Note the exact steps that caused the error
 3. Contact support with the above information

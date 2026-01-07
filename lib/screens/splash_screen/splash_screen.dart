@@ -93,7 +93,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       final logFilePath = path.join(
         logDirectory,
         'logs',
-        'core_manager_${DateFormat('yyyyMMdd').format(DateTime.now())}.log',
+        'ultra_pos_${DateFormat('yyyyMMdd').format(DateTime.now())}.log',
       );
 
       if (globalAppContext.mounted) {

@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 
 class AppVersion {
-  static const platform = MethodChannel('com.core.manager/version');
+  static const platform = MethodChannel('com.pos.ultrapal/version');
 
   static Future<String> get versionCode async {
     try {

@@ -1,6 +1,6 @@
 import 'package:desktoppossystem/shared/services/app_preferences.dart';
 import 'package:desktoppossystem/shared/services/database_backup_restore_service.dart';
-import 'package:desktoppossystem/shared/services/menu_dio_helper.dart';
+import 'package:desktoppossystem/shared/services/ultra_dio_helper.dart';
 import 'package:desktoppossystem/shared/services/dio_helper.dart';
 import 'package:desktoppossystem/shared/services/file_logger.dart';
 import 'package:desktoppossystem/shared/services/pos_db_helper.dart';

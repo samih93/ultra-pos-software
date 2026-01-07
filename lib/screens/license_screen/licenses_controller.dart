@@ -146,6 +146,7 @@ class LicensesController extends ChangeNotifier {
                   key: 'lastLaunchTime',
                   value: DateTime.now().toIso8601String(),
                 );
+            print("user id ${r["userId"]}");
             _ref
                 .read(securePreferencesProvider)
                 .saveData(key: "registrationUserId", value: r["userId"]);

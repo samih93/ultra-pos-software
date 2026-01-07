@@ -24,7 +24,7 @@ class LicenseRepository implements ILicenseRepository {
       final data = await ref
           .read(supaBaseProvider)
           .from('licenses')
-          .select('validDate,for_user ,partner_id , settings')
+          .select('validDate,user_id ,partner_id , settings')
           .eq('license', license)
           .eq("active", 'TRUE');
       if ((data as List).isEmpty) {
@@ -37,7 +37,7 @@ class LicenseRepository implements ILicenseRepository {
           //! save the validation for the user Id
           final insertActivationInfo = await saveActivationInfo(
             UserLicencesModel(
-              userId: data[0]['for_user'].toString(),
+              userId: data[0]['user_id'].toString(),
               validDate: data[0]["validDate"],
               createdAt: DateTime.now().toString(),
               activatedBy: data[0]["partner_id"],
@@ -58,7 +58,7 @@ class LicenseRepository implements ILicenseRepository {
 
           return Right({
             "validDate": data[0]["validDate"],
-            "userId": data[0]['for_user'].toString(),
+            "userId": data[0]['user_id'].toString(),
             "serverSettings": jsonEncode(settings),
           });
         } else {

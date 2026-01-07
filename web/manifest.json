@@ -1,6 +1,6 @@
 {
-    "name": "Core_manager",
-    "short_name": "Core_manager",
+    "name": "ultra_pos",
+    "short_name": "ultra_pos",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

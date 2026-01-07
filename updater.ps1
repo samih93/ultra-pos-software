@@ -109,7 +109,7 @@ try {
     Write-Log "✅ Step 3: Extracting update..."
     
     # Create temp directory
-    $TempDir = Join-Path $env:TEMP ("core_manager_update_" + [System.Guid]::NewGuid().ToString())
+    $TempDir = Join-Path $env:TEMP ("ultra_pos_update_" + [System.Guid]::NewGuid().ToString())
     New-Item -ItemType Directory -Path $TempDir -Force | Out-Null
     Write-Log "Created temp directory: $TempDir"
     

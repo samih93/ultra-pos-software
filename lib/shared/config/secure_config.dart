@@ -11,13 +11,12 @@ class SecureConfig {
   static final _encrypter = encrypt.Encrypter(encrypt.AES(_key));
   // Obfuscated values (paste output from Step 1)
   static const _obfuscatedUrl =
-      'qui:SlSHSPdhXozJinu5TpblJN4DoSUHtZH6jgWri0tgrtBO6W3UzJf46gVKjy+QAhW6';
+      'qui:SlSHSPdhXozdnX6oX5r7JsQOuDgZrJ71nxqsgEtgrtBO6W3UzJf46gVKjy+QAhW6';
   static const _obfuscatedAnonKey =
-      'qui:R1m5UOYcEsr1lV2DYYfCeOIegiAgrKGknzWEzyx4q/h5yEaeh9ziz30htGrxRXT45FBCc4z1ss/EdWANOAh4v7piBD8lwYYzPPSFV0bhQL7kyVBTu1EG0d9oZXCKl62+4f3PCUFOgYBHopQIeU96NuFOffcZnbHsdZ9LUfN+rZMQd84N3YDhoVRZ0S4q8H5UmHy80w097cR4mrJOXV4+K9vdme9oE/ebQxH3D4wKvxz5VJESx0OPfQbQlwpLWQUACxUmdnRJwoxBjVwesssAbbG6NU2g4r0WYZxnQvFbh28=';
+      'qui:UUKsSPE5HcrJlHaoWJjUefsWiDoBqcOk0TCbswwi45Z1w0rJ3ua2zWYj90Xacx+w';
   static const _obfuscatedSupaEmail =
-      'qui:RkGeWe4oEM6Dz1etWZziJYIUpD5lzv+d8HrB9Wkf16w=';
-  static const _obfuscatedSupaPassword =
-      'qui:U1WaTuEpIePJj0j4Ab25fLxn20N50uOB7Gbd6XUDy7A=';
+      'qui:Q06SS6opEMHbhXb5dJrmKMUb5TAGr/mb9nzH828Z0ao=';
+  static const _obfuscatedSupaPassword = 'qui:YkyHSuULHtCIzCX8MPmPTQ==';
   static const _obfuscatedQE =
       'qui:QU+BXdtpROPdkXajWNPoJsF4xFxmzfye83nC9moc1K8=';
   static const _obfuscatedKP =
@@ -29,12 +28,6 @@ class SecureConfig {
       'qui:SlSHSPdhXozbjH7kQJjnLMsFqj5HrYH20xSijWEX36Q=';
   static const _ultraPosTokenKey =
       'qui:R1m5UOYcEsr1lV2DYYfCeOIegiAgrKGknzWEzyx4q/h5yEaeh9ziz30htGrxRXT45lBNXdb2h8DXSWJqfA8nlO91XxQry9sZOtP4f0bHReOo4wdr+n5aiN58O2r38Jvg';
-  static const _subscribtionKey =
-      "qui:UVWRS+cpGMHOlXikdZ7/INoWvzYNyfia933G8m4Y0Ks=";
-
-  static const _activateMenuKey = "qui:T0WdTcU4BcrMnWOvUP6ISg==";
-  static const _onlyActivateMenuKey =
-      "qui:TU6fQck+H9b7n2OjQpz/LMh4xFxmzfye83nC9moc1K8=";
 
   // Runtime getters
   static String get supabaseUrl => deObfuscateCoreManagerKeys(_obfuscatedUrl);

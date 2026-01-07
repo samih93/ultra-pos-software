@@ -32,7 +32,7 @@ bool FlutterWindow::OnCreate() {
 
 void FlutterWindow::SetupMethodChannel() {
   flutter::MethodChannel<flutter::EncodableValue> channel(
-      flutter_controller_->engine()->messenger(), "com.core.manager/version",
+      flutter_controller_->engine()->messenger(), "com.pos.ultrapal/version",
       &flutter::StandardMethodCodec::GetInstance());
 
   channel.SetMethodCallHandler(
