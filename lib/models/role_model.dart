@@ -3,23 +3,14 @@
 class RoleModel {
   int id;
   String name;
-  RoleModel({
-    required this.id,
-    required this.name,
-  });
+  RoleModel({required this.id, required this.name});
 
   factory RoleModel.fromMap(Map<String, dynamic> map) {
-    return RoleModel(
-      id: map['id'] as int,
-      name: map['role'] as String,
-    );
+    return RoleModel(id: map['id'] as int, name: map['role'] as String);
   }
 
   toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'role': name,
-    };
+    return <String, dynamic>{'id': id, 'role': name};
   }
 
   toMapWithoutId() {

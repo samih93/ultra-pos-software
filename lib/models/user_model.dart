@@ -32,17 +32,10 @@ class UserModel {
       name: map['name'],
       email: map['email'],
       password: map['password'],
-      role: RoleModel(id: map['id'] ?? 0, name: map['name'] ?? 'user'),
-    );
-  }
-
-  factory UserModel.fromJsonLocalStorage(Map<String, dynamic> map) {
-    return UserModel(
-      id: map['id'],
-      name: map['name'],
-      email: map['email'],
-      password: map['password'],
-      role: RoleModel.fromMap(map['role']),
+      role: RoleModel(
+        id: map['role']['id'] ?? 0,
+        name: map['role']['role'] ?? 'user',
+      ),
     );
   }
 

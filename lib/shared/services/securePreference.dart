@@ -10,12 +10,14 @@ class SecurePreferences {
 
   Future saveUser(UserModel user) async {
     return await flutterSecureStorage.write(
-        key: 'user', value: jsonEncode(user.toJson()));
+      key: 'user',
+      value: jsonEncode(user.toJson()),
+    );
   }
 
   Future<UserModel?> getUser() async {
     final json = await flutterSecureStorage.read(key: 'user') ?? '';
-    return json != '' ? UserModel.fromJsonLocalStorage(jsonDecode(json)) : null;
+    return json != '' ? UserModel.fromJson(jsonDecode(json)) : null;
   }
 
   Future saveData({required String key, required dynamic value}) async {
