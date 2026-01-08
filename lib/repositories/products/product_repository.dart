@@ -11,6 +11,7 @@ import 'package:desktoppossystem/models/tracked_related_product.dart';
 import 'package:desktoppossystem/repositories/products/iproduct_repository.dart';
 import 'package:desktoppossystem/repositories/restaurant_stock/restaurant_stock_repository.dart';
 import 'package:desktoppossystem/screens/main_screen.dart/main_controller.dart';
+import 'package:desktoppossystem/shared/constances/app_endpoint.dart';
 import 'package:desktoppossystem/shared/services/dependency_injection.dart';
 import 'package:desktoppossystem/shared/utils/enum.dart';
 import 'package:desktoppossystem/shared/utils/extentions.dart';
@@ -634,65 +635,58 @@ class ProductRepository extends IProductRepository {
     bool? isDeleted,
   }) async {
     List<ProductModel> products = [];
-    String q = "";
-    if (isForBarcode == true) {
-      q += " barcode ='${query.toUpperCase()}'";
-    } else {
-      List<String> keywords = query.split(" ");
-      for (int i = 0; i < keywords.length; i++) {
-        q +=
-            " (p.name LIKE '%${keywords[i]}%'  or barcode like '%${keywords[i].toUpperCase()}%' or plu like '%${keywords[i]}%')";
-        if (i < keywords.length - 1) {
-          q += " AND";
-        }
+
+    try {
+      // Build query parameters
+      Map<String, dynamic> queryParams = {'query': query};
+
+      if (categoryId != null) {
+        queryParams['categoryId'] = categoryId.toString();
       }
-    }
 
-    if (categoryId != null) {
-      q += " and categoryId=$categoryId";
-    }
-    if (isTracked != null) {
-      q += " and isTracked=${isTracked == true ? 1 : 0}";
-    }
-    q += " and isActive = ${isDeleted == true ? 0 : 1}";
+      if (isForBarcode != null) {
+        queryParams['isForBarcode'] = isForBarcode.toString();
+      }
 
-    const tables =
-        "${TableConstant.productTable} p left JOIN ${TableConstant.categoryTable} c ON p.categoryId = c.id";
-    final columns = [
-      "p.*",
-      "c.name as categoryName",
-      "c.sort as categorySort",
-      "c.color as color",
-      "c.section as sectionType",
-    ];
-    await ref
-        .read(posDbProvider)
-        .database
-        .query(tables, columns: columns, where: q)
-        .then((value) async {
-          if (value.isNotEmpty) {
-            products = isForBarcode == true
-                ? [ProductModel.fromJson(value[0])]
-                : List.from(value.map((e) => ProductModel.fromJson(e)));
+      if (isTracked != null) {
+        queryParams['isTracked'] = isTracked.toString();
+      }
 
-            // ! getting notes
-            if (ref.read(mainControllerProvider).isShowRestaurantStock ==
-                true) {
-              for (var e in products) {
-                final ingredientsResponse = await ref
-                    .read(restaurantProviderRepository)
-                    .fetchIngredientsBySandwich(e.id!);
-                ingredientsResponse.fold<Future>((l) async {}, (r) async {
-                  e.ingredients = r;
-                });
-              }
-            }
+      if (isDeleted != null) {
+        queryParams['isDeleted'] = isDeleted.toString();
+      }
+
+      final response = await ref
+          .read(ultraPosDioProvider)
+          .getData(
+            endPoint: AppEndpoint.searchAdvancedProducts,
+            query: queryParams,
+          );
+
+      if (response.data["code"] == 200) {
+        products = List.from(
+          (response.data["data"] as List).map((e) => ProductModel.fromJson(e)),
+        );
+
+        // ! getting notes
+        if (ref.read(mainControllerProvider).isShowRestaurantStock == true) {
+          for (var e in products) {
+            final ingredientsResponse = await ref
+                .read(restaurantProviderRepository)
+                .fetchIngredientsBySandwich(e.id!);
+            ingredientsResponse.fold<Future>((l) async {}, (r) async {
+              e.ingredients = r;
+            });
           }
-        })
-        .catchError((error) {
-          debugPrint(error.toString());
-          throw Exception(error);
-        });
+        }
+      } else {
+        products = [];
+      }
+    } catch (error) {
+      debugPrint(error.toString());
+      throw Exception(error);
+    }
+
     return products;
   }
 

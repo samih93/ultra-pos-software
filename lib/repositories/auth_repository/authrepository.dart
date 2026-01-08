@@ -10,8 +10,6 @@ import 'package:desktoppossystem/shared/utils/type_def.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
-import '../../shared/constances/table_constant.dart';
-
 final authProviderRepository = Provider((ref) {
   return AuthRepository(ref);
 });
@@ -30,7 +28,7 @@ class AuthRepository implements IAuthRepository {
         return right(
           UserModel(
             id: int.tryParse(SecureConfig.quiverUserId),
-            name: 'Core Manager',
+            name: 'Ultra Pos',
             password: '',
             email: 'coremanager@gmail.com',
             role: RoleModel(id: 12923, name: AuthRole.ownerRole),

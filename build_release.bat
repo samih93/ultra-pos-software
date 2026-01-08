@@ -10,7 +10,7 @@ if "%1"=="" (
 
 set VERSION=%1
 echo ==========================================
-echo Building Core Manager v%VERSION%
+echo Building Ultra Pos v%VERSION%
 echo ==========================================
 
 echo.
@@ -61,7 +61,7 @@ echo Updater, launcher, and restart scripts copied successfully.
 echo.
 echo [3/4] Creating release zip...
 pushd build\windows\x64\runner\Release
-powershell -Command "$items = Get-ChildItem -Path . | Where-Object { $_.Name -notlike 'backup_*' -and $_.Name -notlike '*.zip' -and $_.Name -ne 'update_temp.zip' -and $_.Name -notlike 'update_log*' -and $_.Name -ne 'update_debug.txt' }; Compress-Archive -Path $items -DestinationPath 'core-manager-v%VERSION%.zip' -Force"
+powershell -Command "$items = Get-ChildItem -Path . | Where-Object { $_.Name -notlike 'backup_*' -and $_.Name -notlike '*.zip' -and $_.Name -ne 'update_temp.zip' -and $_.Name -notlike 'update_log*' -and $_.Name -ne 'update_debug.txt' }; Compress-Archive -Path $items -DestinationPath 'ultra-pos-v%VERSION%.zip' -Force"
 if !ERRORLEVEL! neq 0 (
     echo ERROR: Failed to create ZIP!
     popd
@@ -72,8 +72,8 @@ echo ZIP created successfully (excluding backup folders and temp files).
 
 echo.
 echo [4/4] Generating release info...
-if exist "core-manager-v%VERSION%.zip" (
-    for %%I in ("core-manager-v%VERSION%.zip") do set FILESIZE=%%~zI
+if exist "ultra-pos-v%VERSION%.zip" (
+    for %%I in ("ultra-pos-v%VERSION%.zip") do set FILESIZE=%%~zI
     echo File size: !FILESIZE! bytes
 ) else (
     echo Warning: ZIP file not found!
@@ -85,7 +85,7 @@ echo ==========================================
 echo 🎉 RELEASE READY!
 echo ==========================================
 echo Version: %VERSION%
-echo File: core-manager-v%VERSION%.zip
+echo File: ultra-pos-v%VERSION%.zip
 echo Size: !FILESIZE! bytes
 echo Location: !CD!
 echo.
@@ -94,14 +94,14 @@ echo NEXT STEPS:
 echo ==========================================
 echo 1. Upload ZIP to Supabase Storage:
 echo    - Go to Storage -^> releases -^> zips/
-echo    - Upload: core-manager-v%VERSION%.zip
+echo    - Upload: ultra-pos-v%VERSION%.zip
 echo    - Copy the public URL
 echo.
 echo 2. Update database (run in Supabase SQL Editor):
 echo    INSERT INTO app_versions (version, download_url, file_size, release_notes,is_latest)
 echo    VALUES (
 echo        '%VERSION%',
-echo        'https://svlszknmrtjvnwbkrsfr.supabase.co/storage/v1/object/public/releases/zips/core-manager-v%VERSION%.zip',
+echo        'https://gaibkgpohyskpnmdclay.supabase.co/storage/v1/object/public/releases/zips/ultra-pos-v%VERSION%.zip',
 echo        !FILESIZE!,
 echo        'Release notes for version %VERSION%',
 echo        true

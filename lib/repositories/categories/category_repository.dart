@@ -10,8 +10,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
-import '../../shared/constances/table_constant.dart';
-
 final categoryProviderRepository = Provider((ref) {
   return CategoryRepository(ref);
 });

@@ -107,7 +107,7 @@ class MyApp extends ConsumerWidget {
             ],
             supportedLocales: S.delegate.supportedLocales,
             debugShowCheckedModeBanner: false,
-            title: 'Core Manager',
+            title: 'Ultra Pos',
             theme: ref.watch(themeNotifierProvider),
             home: const ResponsiveWidget(
               desktopView: SplashScreen(),

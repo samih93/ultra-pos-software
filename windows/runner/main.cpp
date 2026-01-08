@@ -17,7 +17,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   // Check if another instance exists
   if (GetLastError() == ERROR_ALREADY_EXISTS) {
     MessageBoxW(nullptr, 
-                L"Core Manager is already running!", 
+                L"Ultra Pos is already running!", 
                 L"Multiple Instances Detected", 
                 MB_OK | MB_ICONERROR);
     ReleaseMutex(mutex);
@@ -74,7 +74,7 @@ LRESULT CALLBACK MyWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam
         if (isClosing) return 0;
 
         int result = MessageBoxW(hwnd,
-            L"Are you sure you want to close Core Manager?",
+            L"Are you sure you want to close Ultra Pos?",
             L"Confirm Exit",
             MB_YESNO | MB_ICONQUESTION);
 

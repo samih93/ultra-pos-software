@@ -15,7 +15,7 @@ function Write-Log {
     Add-Content -Path $LogFile -Value $LogMessage
 }
 
-Write-Log "Core Manager Updater v1.1 Started"
+Write-Log "Ultra Pos Updater v1.1 Started"
 Write-Log "Zip: $ZipPath"
 Write-Log "Target: $TargetDir"
 Write-Log "Exe: $ExeName"

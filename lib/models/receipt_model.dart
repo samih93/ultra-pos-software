@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:desktoppossystem/models/customers_model.dart';
+import 'package:desktoppossystem/models/details_receipt.dart';
 import 'package:desktoppossystem/shared/utils/enum.dart';
 import 'package:desktoppossystem/shared/utils/extentions.dart';
 
@@ -30,6 +31,9 @@ class ReceiptModel {
 
   // for dine in , delivery
   OrderType? orderType;
+
+  final List<DetailsReceipt> receiptDetails;
+
   ReceiptModel({
     this.id,
     required this.foreignReceiptPrice,
@@ -52,6 +56,7 @@ class ReceiptModel {
     this.nbOfCustomers,
     this.isPaid = true,
     this.remainingAmount = 0.0,
+    this.receiptDetails = const [],
   });
 
   factory ReceiptModel.fromJson(Map<String, dynamic> map) {
@@ -96,6 +101,11 @@ class ReceiptModel {
       fromCash: map['withDrawFromCash'] == 1 ? true : false,
       isPaid: map['isPaid'] == 1 ? true : false,
       nbOfCustomers: map['nbOfCustomers'] ?? 1,
+      receiptDetails: map["receiptDetails"] != null
+          ? (map['receiptDetails'] as List)
+                .map((e) => DetailsReceipt.fromJson(e as Map<String, dynamic>))
+                .toList()
+          : [],
     );
   }
 
@@ -122,6 +132,7 @@ class ReceiptModel {
       "remainingAmount": isPaid == true || orderType == OrderType.dineIn
           ? 0.0
           : foreignReceiptPrice,
+      'receiptDetails': receiptDetails.map((e) => e.toJson()).toList(),
     };
   }
 

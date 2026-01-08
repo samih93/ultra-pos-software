@@ -1,4 +1,4 @@
-# Core Manager - Troubleshooting Guide
+# Ultra Pos - Troubleshooting Guide
 
 ## Blank Screen Issue After PC Shutdown
 
@@ -42,7 +42,7 @@ When running the app, check the debug console for initialization logs:
 
 ```
 ╔═══════════════════════════════════════╗
-║   CORE MANAGER INITIALIZATION START   ║
+║   Ultra Pos INITIALIZATION START   ║
 ╚═══════════════════════════════════════╝
 
 App version: 1.1.71.xxx
@@ -84,7 +84,7 @@ Stack: [stack trace]
 **Symptoms**: Error message contains "database is locked"
 **Solution**: 
 1. Close all instances of the app
-2. Delete: `C:\Users\[USER]\AppData\Roaming\Core Manager\PosDb.db`
+2. Delete: `C:\Users\[USER]\AppData\Roaming\Ultra Pos\PosDb.db`
 3. Restart the app (it will recreate the database)
 
 ##### Issue 2: Corrupted Database

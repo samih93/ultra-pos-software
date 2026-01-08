@@ -507,7 +507,7 @@ class MyDrawer extends ConsumerWidget {
                           color: context.brightnessColor,
                         ),
                         DefaultTextView(
-                          text: "Core Manager®",
+                          text: "Ultra Pos®",
                           fontWeight: FontWeight.bold,
                           color: context.brightnessColor,
                         ),

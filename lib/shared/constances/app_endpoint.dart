@@ -7,6 +7,7 @@ class AppEndpoint {
   static const String updateProducts = '$products/update';
   static const String productsByCategory = '$products/by-category';
   static const String syncProductsOrder = '$products/sync-order';
+  static const String searchAdvancedProducts = '$products/search-advanced';
 
   //Categories
   static const String categories = '/categories';

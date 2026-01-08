@@ -26,7 +26,7 @@ class FileLogger {
       if (!await _logFile!.exists()) {
         await _logFile!.create(recursive: true);
         await log('═' * 60);
-        await log('Core Manager Application Log');
+        await log('Ultra Pos Application Log');
         await log('Started: ${DateTime.now()}');
         await log('═' * 60);
       }

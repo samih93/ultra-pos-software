@@ -1,4 +1,4 @@
-# Core Manager - Log Files Guide
+# Ultra Pos - Log Files Guide
 
 ## Finding Error Log Files
 
@@ -9,7 +9,7 @@ When the application encounters an error, it automatically writes detailed infor
 The log files are stored in the **logs** folder inside your application directory:
 
 ```
-C:\core-manager-v1.1.70\logs\
+C:\ultra-pos-v1.1.70\logs\
 ```
 
 Or more generally:
@@ -31,7 +31,7 @@ ultra_pos_20251214.log    (for December 14, 2025)
 
 **Method 1: Quick Access**
 
-1. Open the folder where `Ultra_pos.exe` is located (e.g., `C:\core-manager-v1.1.70\`)
+1. Open the folder where `Ultra_pos.exe` is located (e.g., `C:\ultra-pos-v1.1.70\`)
 2. Look for a folder named `logs`
 3. Open the `logs` folder
 4. Find today's log file (named with today's date)
