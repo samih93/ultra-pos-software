@@ -15,7 +15,6 @@ class DetailsReceipt {
   String? refundReason;
   String? refundDate;
   bool? isTracked;
-  double? countsAsItem;
   bool? isForStaff;
   double discount = 0;
   List<IngredientModel>? ingredients = [];
@@ -34,7 +33,6 @@ class DetailsReceipt {
     this.refundedQty,
     this.refundReason,
     this.refundDate,
-    this.countsAsItem,
     this.isForStaff,
     this.ingredients,
     required this.discount,
@@ -53,19 +51,18 @@ class DetailsReceipt {
       costPrice: double.tryParse(map['costPrice'].toString()) ?? 0,
       isTracked: map['isTracked'] != null
           ? map['isTracked'] == 1
-              ? true
-              : false
+                ? true
+                : false
           : false,
       isRefunded: map['isRefunded'] != null
           ? map['isRefunded'] == 1
-              ? true
-              : false
+                ? true
+                : false
           : false,
       // used for initialize the refunds
       refundedQty: 1,
       refundReason: map['refundReason'] ?? "--",
       refundDate: map['refundDate'],
-      countsAsItem: map['countsAsItem'] ?? 1,
       isForStaff: map['isForStuff'],
       discount: map["discount"],
     );
@@ -82,7 +79,6 @@ class DetailsReceipt {
       "sellingPrice": sellingPrice,
       "costPrice": costPrice,
       "isRefunded": isRefunded == true ? 1 : 0,
-      "countsAsItem": countsAsItem ?? 1,
     };
   }
 
@@ -97,7 +93,6 @@ class DetailsReceipt {
       "isRefunded": isRefunded == true ? 1 : 0,
       "refundReason": refundReason,
       "refundDate": refundDate,
-      "countsAsItem": countsAsItem ?? 1,
       "isForStuff": isForStaff == true ? 1 : 0,
       "discount": discount,
     };
@@ -114,7 +109,6 @@ class DetailsReceipt {
       "isRefunded": isRefunded == true ? 1 : 0,
       "refundReason": refundReason,
       "refundDate": refundDate,
-      "countsAsItem": countsAsItem ?? 1,
       "isForStaff": isForStaff == true ? 1 : 0,
       "discount": discount,
     };
