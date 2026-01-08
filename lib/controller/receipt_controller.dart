@@ -293,7 +293,6 @@ class ReceiptController extends ChangeNotifier {
               originalSellingPrice: product.originalSellingPrice,
               sellingPrice: product.sellingPrice,
               costPrice: product.costPrice,
-              countsAsItem: isForStaff == true ? 0 : product.countsAsItem,
               isForStaff: isForStaff,
               discount: product.discount!,
               ingredients:
