@@ -171,7 +171,6 @@ class UltraDioHelper {
         queryParameters: query,
         data: data,
       );
-      print(response.data);
       return response;
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout) {

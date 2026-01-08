@@ -170,7 +170,6 @@ class ProductModel {
                 ? true
                 : false
           : false,
-      countsAsItem: map['countsAsItem'] ?? 1,
       discount: map['discount'] ?? 0,
       image: map['image'],
       warningAlert: map['warningAlert'] ?? 1,

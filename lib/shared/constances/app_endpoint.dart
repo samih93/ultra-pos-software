@@ -4,7 +4,6 @@ class AppEndpoint {
   static const String authCode = '/auth/signin-code';
 
   static const String products = '/products';
-  static const String updateProducts = '$products/update';
   static const String productsByCategory = '$products/by-category';
   static const String syncProductsOrder = '$products/sync-order';
   static const String searchAdvancedProducts = '$products/search-advanced';
