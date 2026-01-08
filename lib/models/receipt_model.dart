@@ -101,6 +101,11 @@ class ReceiptModel {
       fromCash: map['withDrawFromCash'] == 1 ? true : false,
       isPaid: map['isPaid'] == 1 ? true : false,
       nbOfCustomers: map['nbOfCustomers'] ?? 1,
+      receiptDetails: map["receiptDetails"] != null
+          ? (map['receiptDetails'] as List)
+                .map((e) => DetailsReceipt.fromJson(e as Map<String, dynamic>))
+                .toList()
+          : [],
     );
   }
 
