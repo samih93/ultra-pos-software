@@ -33,7 +33,7 @@ class UltraDioHelper {
         'Accept': 'application/json',
         'x-custom-header': 'core_header',
         'Authorization': 'Bearer $token',
-        'x-user-id': "user$userId",
+        'x-tenant-id': "user$userId",
       };
     } catch (e) {
       // Fallback to basic headers if secure storage fails
