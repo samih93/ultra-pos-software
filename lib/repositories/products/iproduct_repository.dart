@@ -23,6 +23,7 @@ abstract class IProductRepository {
   });
   FutureEither<List<ProductModel>> getProductsByCategoryId(
     int categoryId, {
+    int? offset,
     int? limit,
   });
   FutureEither<ProductStatsModel> fetchProductsStats({int? categoryId});

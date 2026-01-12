@@ -39,54 +39,47 @@ class ProductRepository extends IProductRepository {
     bool? isStock,
     bool? isDeleted,
   }) async {
-    List<ProductModel> list = [];
-    //! getting all products
-    String queryWhere = "";
-    bool includeCategory = categoryId != null ? true : false;
-    queryWhere += categoryId != null ? "categoryId=$categoryId" : "1>0";
-    if (isStock == true) {
-      queryWhere += " and isTracked=1";
-    }
-    queryWhere += " and isActive = ${isDeleted == true ? 0 : 1}";
-    const tables =
-        "${TableConstant.productTable} p left JOIN ${TableConstant.categoryTable} c ON p.categoryId = c.id";
-
-    const columns =
-        "p.*, c.name as categoryName,c.sort as categorySort, c.color as color , c.section as sectionType";
-
     try {
-      await ref
-          .read(posDbProvider)
-          .database
-          .query(
-            tables,
-            columns: columns.split(','),
-            where: queryWhere,
-            orderBy: "c.sort , p.sortOrder ,p.id",
-            offset: offset ?? 0,
-            limit: limit ?? 100,
-          )
-          .then((response) async {
-            list = List.from((response).map((e) => ProductModel.fromJson(e)));
+      final response = await ref
+          .read(ultraPosDioProvider)
+          .getData(
+            endPoint: "${AppEndpoint.products}/fetch",
+            query: {
+              if (limit != null) 'limit': limit.toString(),
+              if (offset != null) 'offset': offset.toString(),
+              if (categoryId != null) 'categoryId': categoryId.toString(),
+              if (isStock != null) 'isStock': isStock ? '1' : '0',
+              if (isDeleted != null) 'isDeleted': isDeleted ? '1' : '0',
+            },
+          );
+      if (response.data["code"] == 200) {
+        List<ProductModel> list = List.from(
+          (response.data["data"]["products"] as List).map(
+            (e) => ProductModel.fromJson(e),
+          ),
+        );
 
-            // ! getting notes
-            if (isStock != true) {
-              if (ref.read(mainControllerProvider).isWorkWithIngredients ==
-                  true) {
-                for (var e in list) {
-                  final ingredientsResponse = await ref
-                      .read(restaurantProviderRepository)
-                      .fetchIngredientsBySandwich(e.id!);
-                  ingredientsResponse.fold<Future>((l) async {}, (r) async {
-                    e.ingredients = r;
-                  });
-                }
-              }
-            }
-          });
+        // // ! getting notes
+        //   if (isStock != true) {
+        //     if (ref.read(mainControllerProvider).isWorkWithIngredients ==
+        //         true) {
+        //       for (var e in list) {
+        //         final ingredientsResponse = await ref
+        //             .read(restaurantProviderRepository)
+        //             .fetchIngredientsBySandwich(e.id!);
+        //         ingredientsResponse.fold<Future>((l) async {}, (r) async {
+        //           e.ingredients = r;
+        //         });
+        //       }
+        //     }
+        //   }
 
-      return right(list);
+        return right(list);
+      } else {
+        return left(FailureModel(response.data["message"] ?? "Unknown error"));
+      }
     } catch (e) {
+      print(e.toString());
       return left(FailureModel(e.toString()));
     }
   }
@@ -668,17 +661,17 @@ class ProductRepository extends IProductRepository {
           (response.data["data"] as List).map((e) => ProductModel.fromJson(e)),
         );
 
-        // ! getting notes
-        if (ref.read(mainControllerProvider).isShowRestaurantStock == true) {
-          for (var e in products) {
-            final ingredientsResponse = await ref
-                .read(restaurantProviderRepository)
-                .fetchIngredientsBySandwich(e.id!);
-            ingredientsResponse.fold<Future>((l) async {}, (r) async {
-              e.ingredients = r;
-            });
-          }
-        }
+        // // ! getting notes
+        // if (ref.read(mainControllerProvider).isShowRestaurantStock == true) {
+        //   for (var e in products) {
+        //     final ingredientsResponse = await ref
+        //         .read(restaurantProviderRepository)
+        //         .fetchIngredientsBySandwich(e.id!);
+        //     ingredientsResponse.fold<Future>((l) async {}, (r) async {
+        //       e.ingredients = r;
+        //     });
+        //   }
+        // }
       } else {
         products = [];
       }
@@ -714,17 +707,17 @@ class ProductRepository extends IProductRepository {
 
   @override
   Future<ProductModel?> getProduct(int id) async {
-    ProductModel? p;
-    await ref
-        .read(posDbProvider)
-        .database
-        .query(TableConstant.productTable, where: "id=$id")
-        .then((value) {
-          if (value.isNotEmpty) {
-            p = ProductModel.fromJson(value[0]);
-          }
-        });
-    return p;
+    try {
+      final response = await ref
+          .read(ultraPosDioProvider)
+          .getData(endPoint: "${AppEndpoint.products}/$id");
+      if (response.data["code"] == 200) {
+        return ProductModel.fromJson(response.data["data"]);
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -869,19 +862,18 @@ class ProductRepository extends IProductRepository {
 
   @override
   FutureEither<ProductStatsModel> fetchProductsStats({int? categoryId}) async {
-    String byCategoryId = " where isActive=1";
-    if (categoryId != null) {
-      byCategoryId += " and categoryId=$categoryId";
-    }
     try {
       final response = await ref
-          .read(posDbProvider)
-          .database
-          .rawQuery(
-            "select SUM(costPrice *qty) as totalCost,SUM(price *qty) as totalPrice , count(*) as totalCount from ${TableConstant.productTable} $byCategoryId",
+          .read(ultraPosDioProvider)
+          .getData(
+            endPoint: AppEndpoint.productsStats,
+            query: {
+              if (categoryId != null) 'categoryId': categoryId.toString(),
+            },
           );
+
       ProductStatsModel totalCostPriceModel = ProductStatsModel.fromMap(
-        response[0],
+        response.data["data"],
       );
 
       return Right(totalCostPriceModel);
@@ -894,43 +886,43 @@ class ProductRepository extends IProductRepository {
   @override
   FutureEither<List<ProductModel>> getProductsByCategoryId(
     int categoryId, {
+    int? offset,
     int? limit,
   }) async {
     List<ProductModel> list = [];
-    //! getting all products
     try {
-      // Always join with category table since we're querying by category
-      const joinedTables =
-          '${TableConstant.productTable} p '
-          'JOIN ${TableConstant.categoryTable} c ON p.categoryId = c.id';
-
-      const columns =
-          'p.*, c.name as categoryName, c.color as color ,c.section as sectionType';
-
-      // Execute query
       final response = await ref
-          .read(posDbProvider)
-          .database
-          .query(
-            joinedTables,
-            columns: columns.split(','),
-            where: 'p.categoryId = ? and p.isActive = 1',
-            whereArgs: [categoryId],
-            limit: limit ?? 200,
+          .read(ultraPosDioProvider)
+          .getData(
+            endPoint: "${AppEndpoint.productsByCategory}/$categoryId",
+            query: {
+              if (limit != null) 'limit': limit.toString(),
+              if (offset != null) 'offset': offset.toString(),
+            },
           );
-      list = List.from((response).map((e) => ProductModel.fromJson(e)));
-      if (ref.read(mainControllerProvider).isShowRestaurantStock == true) {
-        for (var e in list) {
-          final ingredientsResponse = await ref
-              .read(restaurantProviderRepository)
-              .fetchIngredientsBySandwich(e.id!);
-          ingredientsResponse.fold<Future>((l) async {}, (r) async {
-            e.ingredients = r;
-          });
-        }
-      }
 
-      return right(list);
+      if (response.data["code"] == 200) {
+        list = List.from(
+          (response.data["data"]["products"] as List).map(
+            (e) => ProductModel.fromJson(e),
+          ),
+        );
+
+        // if (ref.read(mainControllerProvider).isShowRestaurantStock == true) {
+        //   for (var e in list) {
+        //     final ingredientsResponse = await ref
+        //         .read(restaurantProviderRepository)
+        //         .fetchIngredientsBySandwich(e.id!);
+        //     ingredientsResponse.fold<Future>((l) async {}, (r) async {
+        //       e.ingredients = r;
+        //     });
+        //   }
+        // }
+
+        return right(list);
+      } else {
+        return left(FailureModel(response.data["message"] ?? "Unknown error"));
+      }
     } catch (e) {
       return left(FailureModel(e.toString()));
     }

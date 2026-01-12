@@ -135,14 +135,14 @@ class ProductModel {
     return ProductModel(
       id: map['id'],
       name: map['name'].toString(),
-      sellingPrice: double.tryParse(map['price'].toString()) ?? 0,
-      minSellingPrice: double.tryParse(map['minSellingPrice'].toString()) ?? 0,
-      originalSellingPrice: double.tryParse(map['price'].toString()) ?? 0,
-      costPrice: double.tryParse(map['costPrice'].toString()) ?? 0,
-      profitRate: double.tryParse(map['profitRate'].toString()) ?? 0,
-      qty: double.tryParse(map["qty"].toString()) ?? 0,
+      sellingPrice: map['price'].toString().validateDouble(),
+      minSellingPrice: map['minSellingPrice'].toString().validateDouble(),
+      originalSellingPrice: map['price'].toString().validateDouble(),
+      costPrice: map['costPrice'].toString().validateDouble(),
+      profitRate: map['profitRate'].toString().validateDouble(),
+      qty: map["qty"].toString().validateDouble(),
       barcode: map['barcode'] ?? '',
-      selected: map['selected'] == 1 ? true : false,
+      selected: map['selected'].toString().validateBool(),
       categoryId: map['categoryId'],
       categoryName: map['categoryName'],
       categoryColor: map['color'] != null
@@ -150,32 +150,17 @@ class ProductModel {
           : Pallete.redColor,
       sectionType: map['sectionType'].toString().sectionTypeToEnum(),
       expiryDate: map['expiryDate'] ?? '',
-      isTracked: map['isTracked'] != null
-          ? map['isTracked'] == 1
-                ? true
-                : false
-          : false,
-      enableNotification: map['enableNotification'] != null
-          ? map['enableNotification'] == 1
-                ? true
-                : false
-          : false,
-      isActive: map['isActive'] != null
-          ? map['isActive'] == 1
-                ? true
-                : false
-          : true,
-      isOffer: map['isOffer'] != null
-          ? map['isOffer'] == 1
-                ? true
-                : false
-          : false,
-      discount: map['discount'] ?? 0,
+      isTracked: map['isTracked']?.toString().validateBool() ?? false,
+      enableNotification:
+          map['enableNotification']?.toString().validateBool() ?? false,
+      isActive: map['isActive']?.toString().validateBool() ?? true,
+      isOffer: map['isOffer']?.toString().validateBool() ?? false,
+      discount: map['discount']?.toString().validateDouble() ?? 0,
       image: map['image'],
-      warningAlert: map['warningAlert'] ?? 1,
+      warningAlert: map['warningAlert']?.toString().validateDouble() ?? 1,
       categorySort: map['categorySort'] ?? 0,
       sortOrder: map['sortOrder'] ?? 0,
-      isWeighted: map['isWeighted'] == 1 ? true : false,
+      isWeighted: map['isWeighted'].toString().validateBool(),
       plu: map['plu'],
       description: map['description'] ?? '',
     );
@@ -197,20 +182,12 @@ class ProductModel {
       id: map['id'],
       name: map['name'].toString(),
       sellingPrice: double.tryParse(map['price'].toString()) ?? 0,
-      isActive: map['isActive'] != null
-          ? map['isActive'] == 1
-                ? true
-                : false
-          : true,
+      isActive: map['isActive']?.toString().validateBool() ?? true,
       sortOrder: map['sortOrder'] ?? 50,
       categoryId: map['categoryId'],
       description: map['description'] ?? '',
       image: convertImageData(map['image']),
-      isOffer: map['isOffer'] != null
-          ? map['isOffer'] == 1
-                ? true
-                : false
-          : false,
+      isOffer: map['isOffer']?.toString().validateBool() ?? false,
       selected: null,
     );
   }

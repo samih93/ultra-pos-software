@@ -262,7 +262,7 @@ extension ConvertCurrency on String {
   }
 
   bool validateBool() {
-    return toLowerCase() == 'true' || this == '1';
+    return toLowerCase() == 'true' || toString() == '1';
   }
 
   bool isValidDate() {

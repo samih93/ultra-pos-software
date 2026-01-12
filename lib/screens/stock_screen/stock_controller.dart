@@ -204,7 +204,6 @@ class StockController extends ChangeNotifier {
 
   String lastSearchQuery = "";
   Future searchForAProductInStock(String query, {bool? isByName}) async {
-    print("searching ....");
     final categoryId = _ref.read(selectedStockCategoryProvider)?.id;
     lastSearchQuery = query.trim();
 

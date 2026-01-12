@@ -2507,11 +2507,18 @@ Future<void> productAlertDialog(
         .read(productControllerProvider)
         .fetchProductById(productModel.id ?? 0)
         .then((product) {
+          if (product == null) {
+            ToastUtils.showToast(
+              message: "product not found",
+              type: RequestState.error,
+            );
+            return;
+          }
           Alert(
             style: alertStyle,
             context: context,
             type: AlertType.info,
-            title: "${product!.name}",
+            title: "${product.name}",
             desc:
                 "${S.of(context).whatDoYouWantToDo} ${S.of(context).quetionMark}",
             buttons: [
