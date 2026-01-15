@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -66,7 +67,8 @@ class ProductModel {
   bool? isRefunded = false;
 
   // IMAGE
-  Uint8List? image;
+  String? image;
+  File? pickedImageFile;
 
   SectionType? sectionType;
   int? categorySort;
@@ -186,7 +188,7 @@ class ProductModel {
       sortOrder: map['sortOrder'] ?? 50,
       categoryId: map['categoryId'],
       description: map['description'] ?? '',
-      image: convertImageData(map['image']),
+      image: map['image'],
       isOffer: map['isOffer']?.toString().validateBool() ?? false,
       selected: null,
     );
@@ -321,7 +323,7 @@ class ProductModel {
     double? profitRate,
     bool? isActive,
     bool? isTracked,
-    Uint8List? image,
+    String? image,
     bool? enableNotification,
     String? expiryDate,
     Color? categoryColor,
@@ -386,7 +388,7 @@ class ProductModel {
     double? profitRate,
     bool? isActive,
     bool? isTracked,
-    Uint8List? image,
+    String? image,
     bool? enableNotification,
     String? expiryDate,
     Color? categoryColor,
@@ -459,41 +461,13 @@ class ProductModel {
 
   toJsonForMenu() {
     // Compress image if it exists
-    String compressedImageData = '';
-    if (image != null && image!.isNotEmpty) {
-      try {
-        // Decode the image
-        img.Image? decodedImage = img.decodeImage(image!);
-        if (decodedImage != null) {
-          // Resize if too large (max 300x300 for smaller payload)
-          if (decodedImage.width > 300 || decodedImage.height > 300) {
-            decodedImage = img.copyResize(
-              decodedImage,
-              width: decodedImage.width > decodedImage.height ? 300 : null,
-              height: decodedImage.height >= decodedImage.width ? 300 : null,
-            );
-          }
 
-          // Compress with 40% quality for smaller payload
-          Uint8List compressedBytes = Uint8List.fromList(
-            img.encodeJpg(decodedImage, quality: 40),
-          );
-          compressedImageData = base64Encode(compressedBytes);
-        } else {
-          // If decoding fails, use original
-          compressedImageData = base64Encode(image!);
-        }
-      } catch (e) {
-        // If compression fails, use original
-        compressedImageData = base64Encode(image!);
-      }
-    }
     return {
       'id': id,
       'name': name,
       'price': sellingPrice,
       'isActive': isActive == true ? 1 : 0,
-      'imageData': compressedImageData,
+      'image': image,
       'sortOrder': sortOrder ?? 50,
       "isOffer": isOffer == true ? 1 : 0,
       'categoryId': categoryId,

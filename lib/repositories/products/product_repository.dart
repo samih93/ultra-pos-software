@@ -656,6 +656,8 @@ class ProductRepository extends IProductRepository {
             query: queryParams,
           );
 
+      print(response.data);
+
       if (response.data["code"] == 200) {
         products = List.from(
           (response.data["data"] as List).map((e) => ProductModel.fromJson(e)),

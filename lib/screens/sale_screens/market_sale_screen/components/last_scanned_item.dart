@@ -1,6 +1,7 @@
 import 'package:desktoppossystem/models/product_model.dart';
 import 'package:desktoppossystem/screens/sale_screens/sale_controller.dart';
 import 'package:desktoppossystem/shared/constances/app_constances.dart';
+import 'package:desktoppossystem/shared/default%20components/cached_network_image_widget.dart';
 import 'package:desktoppossystem/shared/default%20components/default_price_text.dart';
 import 'package:desktoppossystem/shared/default%20components/default_text_view.dart';
 import 'package:desktoppossystem/shared/styles/pallete.dart';
@@ -30,7 +31,11 @@ class LastScannedItem extends ConsumerWidget {
           ? Column(
               children: [
                 if (lastScannedItem.image != null) ...[
-                  Expanded(child: Image.memory(lastScannedItem.image!)),
+                  Expanded(
+                    child: CachedNetworkImageWidget(
+                      imageUrl: lastScannedItem.image!,
+                    ),
+                  ),
                 ],
                 Expanded(
                   child: Column(

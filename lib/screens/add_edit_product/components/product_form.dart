@@ -18,6 +18,7 @@ import 'package:desktoppossystem/screens/sale_screens/sale_controller.dart';
 import 'package:desktoppossystem/shared/constances/app_constances.dart';
 import 'package:desktoppossystem/shared/default%20components/app_squared_outlined_button.dart';
 import 'package:desktoppossystem/shared/default%20components/app_text_form_field.dart';
+import 'package:desktoppossystem/shared/default%20components/cached_network_image_widget.dart';
 import 'package:desktoppossystem/shared/default%20components/custom_toggle_button.dart';
 import 'package:desktoppossystem/shared/default%20components/default_outline_button.dart';
 import 'package:desktoppossystem/shared/default%20components/default_text_view.dart';
@@ -245,9 +246,12 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                                 // Read the file and set it as the product image
                                 final imageFile = File(file.path);
                                 final bytes = await imageFile.readAsBytes();
-                                ref
-                                    .read(addEditProductControllerProvider)
-                                    .setProductImageFromBytes(bytes);
+                                addEditcontroller.pickedProductFile = imageFile;
+                                addEditcontroller
+                                        .productModel!
+                                        .pickedImageFile =
+                                    imageFile;
+
                                 break; // Only take the first valid image
                               }
                             }
@@ -269,9 +273,13 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                                     : null,
                               ),
                               child:
-                                  addEditcontroller.productModel != null &&
-                                      addEditcontroller.productModel!.image !=
-                                          null
+                                  (addEditcontroller.pickedProductFile !=
+                                          null ||
+                                      (addEditcontroller.productModel != null &&
+                                          addEditcontroller
+                                                  .productModel!
+                                                  .image !=
+                                              null))
                                   ? Stack(
                                       alignment: AlignmentDirectional.topEnd,
                                       children: [
@@ -279,14 +287,24 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                                           borderRadius: BorderRadius.circular(
                                             8,
                                           ),
-                                          child: Image.memory(
-                                            width: context.width * .12,
-                                            height: context.width * .12,
-                                            fit: BoxFit.cover,
-                                            addEditcontroller
-                                                .productModel!
-                                                .image!,
-                                          ),
+                                          child:
+                                              addEditcontroller
+                                                      .pickedProductFile !=
+                                                  null
+                                              ? Image.file(
+                                                  addEditcontroller
+                                                      .pickedProductFile!,
+                                                  width: context.width * .12,
+                                                  height: context.width * .12,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : CachedNetworkImageWidget(
+                                                  imageUrl: addEditcontroller
+                                                      .productModel!
+                                                      .image!,
+                                                  width: context.width * .12,
+                                                  height: context.width * .12,
+                                                ),
                                         ),
                                         IconButton(
                                           onPressed: () {

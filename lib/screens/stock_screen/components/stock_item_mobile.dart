@@ -1,6 +1,7 @@
 import 'package:desktoppossystem/generated/l10n.dart';
 import 'package:desktoppossystem/models/product_model.dart';
 import 'package:desktoppossystem/screens/main_screen.dart/main_controller.dart';
+import 'package:desktoppossystem/shared/default%20components/cached_network_image_widget.dart';
 import 'package:desktoppossystem/shared/default%20components/default_text_view.dart';
 import 'package:desktoppossystem/shared/styles/pallete.dart';
 import 'package:desktoppossystem/shared/utils/extentions.dart';
@@ -35,12 +36,11 @@ class StockItemMobile extends ConsumerWidget {
                 if (stockItem.image != null) ...[
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4.r),
-                    child: Image.memory(
-                      stockItem.image!,
+                    child: CachedNetworkImageWidget(
+                      imageUrl: stockItem.image!,
                       height: 50.h,
                       width: 50.w,
                       fit: BoxFit.cover,
-                      filterQuality: FilterQuality.low,
                     ),
                   ),
                   SizedBox(width: 12.w),

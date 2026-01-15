@@ -9,6 +9,7 @@ import 'package:desktoppossystem/screens/sale_screens/sale_controller.dart';
 import 'package:desktoppossystem/shared/constances/app_constances.dart';
 import 'package:desktoppossystem/shared/constances/asset_constant.dart';
 import 'package:desktoppossystem/shared/default%20components/are_you_sure_dialog.dart';
+import 'package:desktoppossystem/shared/default%20components/cached_network_image_widget.dart';
 import 'package:desktoppossystem/shared/default%20components/default_price_text.dart';
 import 'package:desktoppossystem/shared/default%20components/default_text_view.dart';
 import 'package:desktoppossystem/shared/default%20components/elevated_button_widget.dart';
@@ -173,10 +174,12 @@ class PriceCheckScreen extends ConsumerWidget {
                               ),
                               if (ref.watch(latestCheckedItemProvider)!.image !=
                                   null)
-                                Image.memory(
+                                CachedNetworkImageWidget(
+                                  imageUrl: ref
+                                      .watch(latestCheckedItemProvider)!
+                                      .image!,
                                   width: context.width * .15,
                                   height: context.width * .15,
-                                  ref.watch(latestCheckedItemProvider)!.image!,
                                 ),
                             ],
                           ),

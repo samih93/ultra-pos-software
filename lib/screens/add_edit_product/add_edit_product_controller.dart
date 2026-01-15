@@ -433,84 +433,53 @@ class AddEditProductController extends ChangeNotifier {
     return products;
   }
 
-  XFile? pickedFile;
-  Uint8List? photoBytes;
+  // Future setProductImageFromBytes(Uint8List imageBytes) async {
+  //   try {
+  //     // Decode image
+  //     img.Image? decodedImage = img.decodeImage(imageBytes);
+  //     if (decodedImage == null) {
+  //       throw Exception("Unable to decode image");
+  //     }
+
+  //     // Resize if necessary
+  //     if (decodedImage.width > 800 || decodedImage.height > 800) {
+  //       decodedImage = img.copyResize(
+  //         decodedImage,
+  //         width: decodedImage.width > decodedImage.height ? 800 : null,
+  //         height: decodedImage.height >= decodedImage.width ? 800 : null,
+  //       );
+  //     }
+
+  //     // Encode back to bytes (JPEG or PNG)
+  //     Uint8List resizedBytes = Uint8List.fromList(
+  //       img.encodeJpg(decodedImage, quality: 80),
+  //     );
+
+  //     // Save to model
+  //     productModel!.image = resizedBytes;
+  //     notifyListeners();
+  //   } catch (e) {
+  //     ToastUtils.showToast(message: e.toString(), type: RequestState.error);
+  //   }
+  // }
+
+  File? pickedProductFile;
 
   removeImage() {
-    productModel!.image = null;
+    pickedProductFile = null;
+    productModel?.image = null;
+    productModel?.pickedImageFile = null;
     notifyListeners();
-  }
-
-  Future setProductImageFromBytes(Uint8List imageBytes) async {
-    try {
-      // Decode image
-      img.Image? decodedImage = img.decodeImage(imageBytes);
-      if (decodedImage == null) {
-        throw Exception("Unable to decode image");
-      }
-
-      // Resize if necessary
-      if (decodedImage.width > 800 || decodedImage.height > 800) {
-        decodedImage = img.copyResize(
-          decodedImage,
-          width: decodedImage.width > decodedImage.height ? 800 : null,
-          height: decodedImage.height >= decodedImage.width ? 800 : null,
-        );
-      }
-
-      // Encode back to bytes (JPEG or PNG)
-      Uint8List resizedBytes = Uint8List.fromList(
-        img.encodeJpg(decodedImage, quality: 80),
-      );
-
-      // Save to model
-      productModel!.image = resizedBytes;
-      notifyListeners();
-    } catch (e) {
-      ToastUtils.showToast(message: e.toString(), type: RequestState.error);
-    }
   }
 
   Future pickProductImage() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
-        allowedExtensions: ['jpg', 'png', 'jpeg', 'webp'],
-        type: FileType.custom,
+        type: FileType.image,
       );
       if (result != null) {
-        // Load image into memory
-        Uint8List imageBytes = await File(
-          result.files.single.path!,
-        ).readAsBytes();
-
-        // Decode image
-        img.Image? decodedImage = img.decodeImage(imageBytes);
-        if (decodedImage == null) {
-          throw Exception("Unable to decode image");
-        }
-
-        // Resize if necessary
-        if (decodedImage.width > 800 || decodedImage.height > 800) {
-          decodedImage = img.copyResize(
-            decodedImage,
-            width: decodedImage.width > decodedImage.height ? 800 : null,
-            height: decodedImage.height >= decodedImage.width ? 800 : null,
-          );
-        }
-
-        // Encode back to bytes (JPEG or PNG)
-        Uint8List resizedBytes = Uint8List.fromList(
-          img.encodeJpg(decodedImage, quality: 80),
-        );
-
-        // Save to model
-        productModel!.image = resizedBytes;
-        pickedFile = result.files.single.xFile;
-      } else {
-        ToastUtils.showToast(
-          message: "No image selected",
-          type: RequestState.error,
-        );
+        pickedProductFile = File(result.files.single.path!);
+        productModel?.pickedImageFile = pickedProductFile;
       }
     } catch (e) {
       ToastUtils.showToast(message: e.toString(), type: RequestState.error);

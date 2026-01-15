@@ -3,6 +3,7 @@ import 'package:desktoppossystem/generated/l10n.dart';
 import 'package:desktoppossystem/models/product_model.dart';
 import 'package:desktoppossystem/screens/online_menu_screen/sub_sreens/add_edit_menu_product_screen.dart';
 import 'package:desktoppossystem/shared/constances/app_constances.dart';
+import 'package:desktoppossystem/shared/default%20components/cached_network_image_widget.dart';
 import 'package:desktoppossystem/shared/default%20components/default_text_view.dart';
 import 'package:desktoppossystem/shared/styles/pallete.dart';
 import 'package:desktoppossystem/shared/styles/sizes.dart';
@@ -113,24 +114,11 @@ class OnlineProductItem extends ConsumerWidget {
           if (product.image != null && product.image!.isNotEmpty)
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.memory(
-                product.image!,
+
+              child: CachedNetworkImageWidget(
+                imageUrl: product.image!,
                 width: 54,
                 height: 54,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: 54,
-                  height: 54,
-                  decoration: BoxDecoration(
-                    color: Pallete.greyColor.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.broken_image,
-                    color: Pallete.greyColor,
-                    size: 24,
-                  ),
-                ),
               ),
             )
           else

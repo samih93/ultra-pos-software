@@ -40,7 +40,7 @@ class _AddEditMenuProductScreenState
   late TextEditingController _priceController;
   late TextEditingController _descriptionController;
   bool _isOffer = false;
-  Uint8List? _selectedImage;
+  File? _selectedImage;
   bool _isSaving = false;
   bool _isDragging = false;
 
@@ -56,7 +56,7 @@ class _AddEditMenuProductScreenState
       text: widget.p?.description ?? '',
     );
     _isOffer = widget.p?.isOffer ?? false;
-    _selectedImage = widget.p?.image;
+    _selectedImage = widget.p?.pickedImageFile;
   }
 
   @override
@@ -100,7 +100,7 @@ class _AddEditMenuProductScreenState
         );
 
         setState(() {
-          _selectedImage = resizedBytes;
+          _selectedImage = File(result.files.single.path!);
         });
       }
     } catch (e) {
@@ -127,7 +127,6 @@ class _AddEditMenuProductScreenState
       description: _descriptionController.text.trim(),
       isOffer: _isOffer,
       categoryId: widget.c.id,
-      image: _selectedImage,
       isActive: true,
       sortOrder: widget.p?.sortOrder ?? 50,
       selected: null,
@@ -334,32 +333,12 @@ class _AddEditMenuProductScreenState
                     fileName.endsWith('.gif')) {
                   // Read the file and set it as the product image
                   final imageFile = File(file.path);
-                  Uint8List imageBytes = await imageFile.readAsBytes();
 
+                  setState(() {
+                    _selectedImage = imageFile;
+                  });
                   // Decode and resize
-                  img.Image? decodedImage = img.decodeImage(imageBytes);
-                  if (decodedImage != null) {
-                    // Resize if necessary
-                    if (decodedImage.width > 300 || decodedImage.height > 300) {
-                      decodedImage = img.copyResize(
-                        decodedImage,
-                        width: decodedImage.width > decodedImage.height
-                            ? 300
-                            : null,
-                        height: decodedImage.height >= decodedImage.width
-                            ? 300
-                            : null,
-                      );
-                    }
 
-                    Uint8List resizedBytes = Uint8List.fromList(
-                      img.encodeJpg(decodedImage, quality: 80),
-                    );
-
-                    setState(() {
-                      _selectedImage = resizedBytes;
-                    });
-                  }
                   break; // Only take the first valid image
                 }
               }
@@ -381,7 +360,7 @@ class _AddEditMenuProductScreenState
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.memory(
+                            child: Image.file(
                               _selectedImage!,
                               width: 300,
                               height: 300,
