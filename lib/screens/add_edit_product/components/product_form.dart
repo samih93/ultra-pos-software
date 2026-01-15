@@ -78,6 +78,7 @@ class _ProductFormState extends ConsumerState<ProductForm> {
       categories.sort((a, b) => a.name!.compareTo(b.name!));
     }
 
+    print("is dragging $_isDragging");
     return Center(
       child: SizedBox(
         width: context.width * 0.85,
@@ -245,13 +246,14 @@ class _ProductFormState extends ConsumerState<ProductForm> {
                                   fileName.endsWith('.gif')) {
                                 // Read the file and set it as the product image
                                 final imageFile = File(file.path);
-                                final bytes = await imageFile.readAsBytes();
-                                addEditcontroller.pickedProductFile = imageFile;
-                                addEditcontroller
-                                        .productModel!
-                                        .pickedImageFile =
-                                    imageFile;
-
+                                final controller = ref.read(
+                                  addEditProductControllerProvider,
+                                );
+                                controller.pickedProductFile = imageFile;
+                                if (controller.productModel != null) {
+                                  controller.productModel!.pickedImageFile =
+                                      imageFile;
+                                }
                                 break; // Only take the first valid image
                               }
                             }

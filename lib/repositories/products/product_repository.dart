@@ -16,6 +16,7 @@ import 'package:desktoppossystem/shared/services/dependency_injection.dart';
 import 'package:desktoppossystem/shared/utils/enum.dart';
 import 'package:desktoppossystem/shared/utils/extentions.dart';
 import 'package:desktoppossystem/shared/utils/type_def.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -132,31 +133,27 @@ class ProductRepository extends IProductRepository {
     List<TrackedRelatedProductModel> trackedRelatedProductModel,
   ) async {
     try {
-      p.isActive = true;
-      var checkProduct = await getProductByBarcode(p.barcode.toString());
-      if (checkProduct != null) {
-        throw Exception("barcode exist try another one");
+      final productMap = p.toJsonWithoutId();
+      if (p.pickedImageFile != null) {
+        productMap['image'] = await MultipartFile.fromFile(
+          p.pickedImageFile!.path,
+          filename:
+              'product_${DateTime.now().millisecondsSinceEpoch}.${p.pickedImageFile!.path.split('.').last}',
+        );
       }
+      final formData = FormData.fromMap(productMap);
+      final response = await ref
+          .read(ultraPosDioProvider)
+          .postFormData(url: AppEndpoint.products, formData: formData);
 
-      if (p.isWeighted == true) {
-        final checkPluProduct = await fetchProductByPlu(p.plu ?? 0);
-        if (checkPluProduct != null) {
-          throw Exception("Plu exist try another one");
-        }
+      if (response.data["code"] == 200) {
+        ProductModel product = ProductModel.fromJson(response.data["data"]);
+        return right(product);
+      } else {
+        return left(FailureModel(response.data["message"]));
       }
-
-      final insertedId = await ref
-          .read(posDbProvider)
-          .database
-          .insert(TableConstant.productTable, p.toJsonWithoutId());
-      ProductModel product = await getProductWithCategoryColor(insertedId);
-
-      for (var element in trackedRelatedProductModel) {
-        element.productId = insertedId;
-      }
-      addRelatedTrackedProductsList(trackedRelatedProductModel);
-
-      return right(product);
+      //! toFix
+      //addRelatedTrackedProductsList(trackedRelatedProductModel);
     } catch (e) {
       print(e.toString());
       return left(FailureModel(e.toString()));
@@ -186,39 +183,37 @@ class ProductRepository extends IProductRepository {
     List<TrackedRelatedProductModel> trackedRelatedProductModel,
   ) async {
     try {
-      var checkBarcodeProduct = await getProductByBarcode(p.barcode.toString());
-
-      if (checkBarcodeProduct != null && checkBarcodeProduct.id != p.id) {
-        throw Exception("barcode exist try another one");
-      }
-      if (p.isWeighted == true) {
-        final checkPluProduct = await fetchProductByPlu(p.plu ?? 0);
-        if (checkPluProduct != null && checkPluProduct.id != p.id) {
-          throw Exception("Plu exist try another one");
+      final productMap = p.toJsonWithoutId();
+      if (p.pickedImageFile != null) {
+        productMap['image'] = await MultipartFile.fromFile(
+          p.pickedImageFile!.path,
+          filename:
+              'product_${DateTime.now().millisecondsSinceEpoch}.${p.pickedImageFile!.path.split('.').last}',
+        );
+      } else {
+        if (p.image == null) {
+          productMap['delete_image'] = true;
         }
       }
-
+      final formData = FormData.fromMap(productMap);
       final response = await ref
-          .read(posDbProvider)
-          .database
-          .update(
-            TableConstant.productTable,
-            p.toJsonWithoutId(),
-            where: "id =${p.id}",
+          .read(ultraPosDioProvider)
+          .updatePostFormData(
+            url: '${AppEndpoint.products}/${p.id}',
+            formData: formData,
           );
-      await removeRelatedTrackedProductsList(p.id!);
-
-      if (p.isOffer == true) {
-        // Handle offer product case
-        await addRelatedTrackedProductsList(trackedRelatedProductModel);
+      if (response.data["code"] == 200) {
+        ProductModel product = ProductModel.fromJson(
+          response.data["data"]["product"],
+        );
+        return right(product);
       } else {
-        // Update offers cost if this is a base product
-        await updateOffersCostByBaseProductId(p.id!, p.costPrice ?? 0);
+        return left(FailureModel(response.data["message"]));
       }
-      ProductModel product = await getProductWithCategoryColor(p.id!);
-
-      return right(product);
+      //! toFix
+      //addRelatedTrackedProductsList(trackedRelatedProductModel);
     } catch (e) {
+      print(e.toString());
       return left(FailureModel(e.toString()));
     }
   }
@@ -655,8 +650,6 @@ class ProductRepository extends IProductRepository {
             endPoint: AppEndpoint.searchAdvancedProducts,
             query: queryParams,
           );
-
-      print(response.data);
 
       if (response.data["code"] == 200) {
         products = List.from(

@@ -163,7 +163,7 @@ class ProductModel {
       categorySort: map['categorySort'] ?? 0,
       sortOrder: map['sortOrder'] ?? 0,
       isWeighted: map['isWeighted'].toString().validateBool(),
-      plu: map['plu'],
+      plu: map['plu'].toString().validateInteger(),
       description: map['description'] ?? '',
     );
   }

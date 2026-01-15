@@ -116,6 +116,60 @@ class UltraDioHelper {
     }
   }
 
+  Future<Response> postFormData({
+    required String url,
+    required FormData formData,
+  }) async {
+    try {
+      dio.options.connectTimeout = const Duration(seconds: 15);
+
+      // Get auth headers and merge with any additional headers
+      final authHeaders = await _getAuthHeaders();
+      dio.options.headers = {...authHeaders};
+      return await dio.post(url, data: formData);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw Exception('Connection timeout occurred!');
+      } else if (e.error is SocketException) {
+        throw Exception(
+          'No internet connection or DNS resolution failed. Please check your network.',
+        );
+      } else {
+        throw Exception('An unexpected Dio error occurred: ${e.message}');
+      }
+    } catch (e) {
+      // Catch any other type of exceptions not related to Dio
+      throw Exception('An unexpected error occurred: $e');
+    }
+  }
+
+  Future<Response> updatePostFormData({
+    required String url,
+    required FormData formData,
+  }) async {
+    try {
+      dio.options.connectTimeout = const Duration(seconds: 15);
+
+      // Get auth headers and merge with any additional headers
+      final authHeaders = await _getAuthHeaders();
+      dio.options.headers = {...authHeaders};
+      return await dio.put(url, data: formData);
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
+        throw Exception('Connection timeout occurred!');
+      } else if (e.error is SocketException) {
+        throw Exception(
+          'No internet connection or DNS resolution failed. Please check your network.',
+        );
+      } else {
+        throw Exception('An unexpected Dio error occurred: ${e.message}');
+      }
+    } catch (e) {
+      // Catch any other type of exceptions not related to Dio
+      throw Exception('An unexpected error occurred: $e');
+    }
+  }
+
   Future<Response> updateData({
     required String endPoint,
     Map<String, dynamic>? query,
