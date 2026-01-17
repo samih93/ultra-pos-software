@@ -9,6 +9,8 @@ class AppEndpoint {
   static const String searchAdvancedProducts = '$products/search-advanced';
   static const String productsStats = '$products/stats';
   static const String productsQuickSelection = '$products/quick-selection';
+  static const String productsQuickSelectionReorder =
+      '$products/quick-selection/reorder';
 
   //Categories
   static const String categories = '/categories';

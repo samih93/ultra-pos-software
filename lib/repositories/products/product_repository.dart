@@ -1555,10 +1555,16 @@ class ProductRepository extends IProductRepository {
   @override
   FutureEitherVoid addQuickSelectionProduct(int productId) async {
     try {
-      final response = await ref.read(posDbProvider).database.insert(
-        TableConstant.quickSelectProductsTable,
-        {"productId": productId},
-      );
+      final response = await ref
+          .read(ultraPosDioProvider)
+          .postData(
+            endPoint: AppEndpoint.productsQuickSelection,
+            data: {"productId": productId},
+          );
+      if (response.data["code"] != 200) {
+        return left(FailureModel(response.data["message"] ?? "Unknown error"));
+      }
+
       return right(null);
     } catch (e) {
       return left(FailureModel(e.toString()));
@@ -1568,21 +1574,17 @@ class ProductRepository extends IProductRepository {
   @override
   FutureEither<List<ProductModel>> fetchQuickSelectionProducts() async {
     try {
-      final db = ref.read(posDbProvider).database;
-
-      final response = await db.rawQuery('''
-  SELECT p.*, q.sortOrder 
-  FROM ${TableConstant.productTable} p
-  JOIN ${TableConstant.quickSelectProductsTable} q 
-    ON p.id = q.productId
-  WHERE p.isActive = 1
-  ORDER BY q.sortOrder
-''');
-
-      List<ProductModel> list = response
-          .map((e) => ProductModel.fromJson(e))
-          .toList();
-      return right(list);
+      final response = await ref
+          .read(ultraPosDioProvider)
+          .getData(endPoint: AppEndpoint.productsQuickSelection);
+      if (response.data["code"] == 200) {
+        List<ProductModel> list = List.from(
+          (response.data["data"] as List).map((e) => ProductModel.fromJson(e)),
+        );
+        return right(list);
+      } else {
+        return left(FailureModel(response.data["message"] ?? "Unknown error"));
+      }
     } catch (e) {
       return left(FailureModel(e.toString()));
     }
@@ -1591,13 +1593,12 @@ class ProductRepository extends IProductRepository {
   @override
   FutureEitherVoid removeQuickSelectionProduct(int productId) async {
     try {
-      final db = ref.read(posDbProvider).database;
-
-      await db.rawDelete(
-        'DELETE FROM ${TableConstant.quickSelectProductsTable} WHERE productId = ?',
-        [productId],
-      );
-
+      final response = await ref
+          .read(ultraPosDioProvider)
+          .delete(endPoint: "${AppEndpoint.productsQuickSelection}/$productId");
+      if (response.data["code"] != 200) {
+        return left(FailureModel(response.data["message"] ?? "Unknown error"));
+      }
       return right(null);
     } catch (e) {
       return left(FailureModel(e.toString()));
@@ -1609,19 +1610,19 @@ class ProductRepository extends IProductRepository {
     List<ProductModel> products,
   ) async {
     try {
-      print("products ${products.map((e) => e.id).toList()}");
-      final db = ref.read(posDbProvider).database;
-      Batch batch = db.batch();
+      final response = await ref
+          .read(ultraPosDioProvider)
+          .putData(
+            endPoint: AppEndpoint.productsQuickSelectionReorder,
+            data: {
+              "products": products.map((e) => {"id": e.id}).toList(),
+            },
+          );
 
-      // Update sortOrder for each product in the quick selection table
-      for (int i = 0; i < products.length; i++) {
-        batch.rawUpdate(
-          'UPDATE ${TableConstant.quickSelectProductsTable} SET sortOrder = ? WHERE productId = ?',
-          [i, products[i].id],
-        );
+      if (response.data["code"] != 200) {
+        return left(FailureModel(response.data["message"] ?? "Unknown error"));
       }
 
-      await batch.commit(noResult: true);
       return right(null);
     } catch (e) {
       return left(FailureModel(e.toString()));
