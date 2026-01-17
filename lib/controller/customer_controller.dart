@@ -183,7 +183,7 @@ class CustomerController extends ChangeNotifier {
       fetchCustomerByBatchRequestState = RequestState.loading;
       notifyListeners();
       final customerRes = await _iCustomerRepository.fetchCustomersByBatch(
-        batchSize: _batchSize,
+        limit: _batchSize,
         offset: _offset,
       );
       customerRes.fold(
@@ -249,7 +249,7 @@ class CustomerController extends ChangeNotifier {
     getDownloadCustomersRequestState = RequestState.loading;
     notifyListeners();
     final res = await _iCustomerRepository.fetchCustomersByBatch(
-      batchSize: 100000000000,
+      limit: 100000000000,
       offset: 0,
     );
 

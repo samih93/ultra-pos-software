@@ -19,4 +19,9 @@ class AppEndpoint {
 
   //Settings
   static const String settings = '/settings';
+
+  //Customers
+  static const String customers = '/customers';
+  static const String customersSearch = '/customers/search';
+  static const String customersBatch = '/customers/batch';
 }

@@ -10,9 +10,12 @@ abstract class ICustomerRepository {
   FutureEitherVoid deleteCustomerById(int id);
 
   FutureEitherVoid addBulkCustomers(List<CustomerModel> customers);
-  FutureEither<List<CustomerModel>> fetchCustomersByBatch(
-      {required int offset, required int batchSize});
+  FutureEither<List<CustomerModel>> fetchCustomersByBatch({
+    required int offset,
+    required int limit,
+  });
   FutureEither<int> fetchCustomersCount();
   FutureEither<List<CustomerModel>> fetchTop10Customers(
-      DashboardFilterEnum? view);
+    DashboardFilterEnum? view,
+  );
 }

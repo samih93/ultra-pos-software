@@ -1,6 +1,7 @@
 import 'package:desktoppossystem/models/customers_model.dart';
 import 'package:desktoppossystem/models/failure_model.dart';
 import 'package:desktoppossystem/repositories/customers/icustomer_repository.dart';
+import 'package:desktoppossystem/shared/constances/app_endpoint.dart';
 import 'package:desktoppossystem/shared/constances/table_constant.dart';
 import 'package:desktoppossystem/shared/services/dependency_injection.dart';
 import 'package:desktoppossystem/shared/utils/enum.dart';
@@ -21,29 +22,20 @@ class CustomerRepository extends ICustomerRepository {
   @override
   FutureEither<CustomerModel> addCustomer(CustomerModel customerModel) async {
     try {
-      CustomerModel? customer;
+      final response = await ref
+          .read(ultraPosDioProvider)
+          .postData(
+            endPoint: AppEndpoint.customers,
+            data: customerModel.toJson(),
+          );
+      if (response.data["code"] != 200) {
+        return left(FailureModel(response.data["message"] ?? "Unknown error"));
+      }
+      CustomerModel customer = CustomerModel.fromJson(
+        response.data["data"]["customer"],
+      );
 
-      final checkCustomer = await checkCustomerByPhone(
-        customerModel.phoneNumber.toString(),
-      );
-      await checkCustomer.fold(
-        (l) {
-          throw Exception(l.message);
-        },
-        (r) async {
-          await ref
-              .read(posDbProvider)
-              .database
-              .insert(TableConstant.customersTable, customerModel.toJson())
-              .then((value) {
-                debugPrint("inserted $value");
-                customer = CustomerModel.second();
-                customer = customerModel;
-                customer!.id = value;
-              });
-        },
-      );
-      return right(customerModel);
+      return right(customer);
     } catch (e) {
       return left(FailureModel(e.toString()));
     }
@@ -53,49 +45,21 @@ class CustomerRepository extends ICustomerRepository {
   FutureEither<List<CustomerModel>> getCustomersByNameOrPhone(
     String query,
   ) async {
-    List<CustomerModel> customers = [];
-
     try {
-      List<String> keywords = query.split(" ");
-      String q = "";
-      for (int i = 0; i < keywords.length; i++) {
-        q +=
-            " (phoneNumber like '%${keywords[i]}%' or name like '%${keywords[i]}%' )";
-        if (i < keywords.length - 1) {
-          q += " AND";
-        }
+      final response = await ref
+          .read(ultraPosDioProvider)
+          .getData(
+            endPoint: AppEndpoint.customersSearch,
+            query: {"query": query},
+          );
+      if (response.data["code"] != 200) {
+        return left(FailureModel(response.data["message"] ?? "Unknown error"));
       }
-      await ref
-          .read(posDbProvider)
-          .database
-          .query(TableConstant.customersTable, where: q)
-          .then((response) {
-            customers = List.from(
-              (response).map((e) => CustomerModel.fromJson(e)),
-            );
-          });
+      List<CustomerModel> customers = List.from(
+        response.data["data"],
+      ).map((e) => CustomerModel.fromJson(e)).toList();
 
       return right(customers);
-    } catch (e) {
-      return left(FailureModel(e.toString()));
-    }
-  }
-
-  FutureEither checkCustomerByPhone(String phoneNumber) async {
-    try {
-      final result = await ref
-          .read(posDbProvider)
-          .database
-          .query(
-            TableConstant.customersTable,
-            where: "phoneNumber='$phoneNumber'",
-          );
-
-      if (result.isNotEmpty) {
-        // If the phone number already exists, return FailureModel
-        return left(FailureModel("Phone number already exists"));
-      }
-      return right(true);
     } catch (e) {
       return left(FailureModel(e.toString()));
     }
@@ -105,22 +69,20 @@ class CustomerRepository extends ICustomerRepository {
   FutureEither<CustomerModel> updateCustomer(
     CustomerModel customerModel,
   ) async {
-    CustomerModel customer = CustomerModel.second();
-
+    final response = await ref
+        .read(ultraPosDioProvider)
+        .putData(
+          endPoint: "${AppEndpoint.customers}/${customerModel.id}",
+          data: customerModel.toJson(),
+        );
+    if (response.data["code"] != 200) {
+      return left(FailureModel(response.data["message"] ?? "Unknown error"));
+    }
     try {
-      await ref
-          .read(posDbProvider)
-          .database
-          .rawUpdate(
-            "update ${TableConstant.customersTable} set name='${customerModel.name}', phoneNumber='${customerModel.phoneNumber}' ,  Address='${customerModel.address}',discount =${customerModel.discount}  where id=${customerModel.id}",
-          )
-          .then((value) {
-            customer = customerModel;
-          })
-          .catchError((error) {
-            debugPrint(error.toString());
-            throw Exception(error);
-          });
+      CustomerModel customer = CustomerModel.fromJson(
+        response.data["data"]["customer"],
+      );
+
       return right(customer);
     } catch (e) {
       return left(FailureModel(e.toString()));
@@ -130,21 +92,21 @@ class CustomerRepository extends ICustomerRepository {
   @override
   FutureEither<List<CustomerModel>> fetchCustomersByBatch({
     required int offset,
-    required int batchSize,
+    required int limit,
   }) async {
-    List<CustomerModel> customers = [];
-
     try {
-      await ref
-          .read(posDbProvider)
-          .database
-          .query(TableConstant.customersTable, limit: batchSize, offset: offset)
-          .then((response) {
-            customers = List.from(
-              (response).map((e) => CustomerModel.fromJson(e)),
-            );
-          });
-
+      final response = await ref
+          .read(ultraPosDioProvider)
+          .getData(
+            endPoint: AppEndpoint.customersBatch,
+            query: {"offset": offset, "limit": limit},
+          );
+      if (response.data["code"] != 200) {
+        return left(FailureModel(response.data["message"] ?? "Unknown error"));
+      }
+      List<CustomerModel> customers = List.from(
+        response.data["data"]["customers"],
+      ).map((e) => CustomerModel.fromJson(e)).toList();
       return right(customers);
     } catch (e) {
       return left(FailureModel(e.toString()));

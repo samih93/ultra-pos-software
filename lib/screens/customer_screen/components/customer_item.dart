@@ -76,26 +76,27 @@ class CustomerItem extends ConsumerWidget {
                     );
                   },
                 ),
-                AppSquaredOutlinedButton(
-                  states: [ref.watch(subscriptionControllerProvider).state],
-                  size: const Size(120, 38),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.add),
-                      DefaultTextView(
-                        color: Pallete.blackColor,
-                        text: "subscription",
-                      ),
-                    ],
+                if (ref.read(mainControllerProvider).subscriptionActivated)
+                  AppSquaredOutlinedButton(
+                    states: [ref.watch(subscriptionControllerProvider).state],
+                    size: const Size(120, 38),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.add),
+                        DefaultTextView(
+                          color: Pallete.blackColor,
+                          text: "subscription",
+                        ),
+                      ],
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) =>
+                            AddSubscriptionDialog(customerModel: customerModel),
+                      );
+                    },
                   ),
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) =>
-                          AddSubscriptionDialog(customerModel: customerModel),
-                    );
-                  },
-                ),
                 AppSquaredOutlinedButton(
                   child: const Icon(FontAwesomeIcons.penToSquare),
                   onPressed: () {
